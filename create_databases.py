@@ -2,6 +2,9 @@
 import json
 import requests
 import io
+import os
+import Queue as Q
+from difflib import SequenceMatcher
 
 def load_from_config():
     with open('config.json') as config_file:
@@ -57,8 +60,35 @@ def parse_array_into_dict(array, key_string):
         new_dict[new_key] = entry
     return new_dict
 
+def find_similar_strings():
+    """
+    Finds all strings that are similar over a certain threshold.
+    """
+    # check if database esists, otherwise create database
+    if not os.path.isfile('food_db.json'):
+        load_food_ingredients()
+    
+    with open('food_db.json') as data:
+        data = json.load(data)
+    
+    # create dictionary to hold most similar strings
+    similarity_dict = dict.fromkeys(data.keys())
+    for i in data.keys():
+        print i
+        similarity_queue = Q.PriorityQueue()
+        for j in data.keys():
+            current_ratio = SequenceMatcher(None, i, j).ratio()
+            if not current_ratio == 1.0 and current_ratio > 0.8:
+                similarity_queue.put((current_ratio, j))
+        similarity_dict[i] = []
+        while not similarity_queue.empty():
+            similarity_dict[i].append(similarity_queue.get())
+    print similarity_dict
+ 
 def main():
-    load_food_ingredients()
+    # load_food_ingredients()
+    find_similar_strings()
 
 if __name__ == '__main__':
     main()
+
