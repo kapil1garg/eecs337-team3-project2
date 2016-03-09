@@ -3,6 +3,7 @@
 	the name is a string and the other three are string list
 '''
 import urllib3
+import json
 from lxml import html
 
 # this two url is for testing
@@ -58,7 +59,7 @@ def get_recipetext_from_html(url):
 
 def main():
 	recipe = get_recipetext_from_html(URL)
-	return
+	print json.dumps(recipe, indent=4)
 
 if __name__ == "__main__":
     main()
