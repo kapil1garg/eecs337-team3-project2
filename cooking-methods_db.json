@@ -1,100 +1,35 @@
-{
-	"bake"
-},
-{
-	"barbecue"
-},
-{
-	"baste"
-},
-{
-	"blacken"
-},
-{
-	"blanch"
-},
-{
-	"boil"
-},
-{
-	"braise"
-},
-{
-	"brine"
-},
-{
-	"broast"
-},
-{
-	"brown"
-},
-{
-	"caramelize"
-},
-{
-	"deep fry"
-},
-{
-	"dehydrate"
-},
-{
-	"fry"
-},
-{
-	"grill"
-},
-{
-	"glaze"
-},
-{
-	"microwave"
-},
-{
-	"pan fry"
-},
-{
-	"parboil"
-},
-{
-	"poach"
-},
-{
-	"pressure cook"
-},
-{
-	"puree"
-},
-{
-	"reduce"
-},
-{
-	"roast"
-},
-{
-	"rotiserie"
-},
-{
-	"saute"
-},
-{
-	"sear"
-},
-{
-	"simmer"
-},
-{
-	"smoke"
-},
-{
-	"steam"
-},
-{
-	"stew"
-},
-{
-	"stir fry"
-},
-{
+[
+	"bake",
+	"barbecue",
+	"baste",
+	"blacken",
+	"blanch",
+	"boil",
+	"braise",
+	"brine",
+	"broast",
+	"brown",
+	"caramelize",
+	"deep fry",
+	"dehydrate",
+	"fry",
+	"grill",
+	"glaze",
+	"microwave",
+	"pan fry",
+	"parboil",
+	"poach",
+	"pressure cook",
+	"puree",
+	"reduce",
+	"roast",
+	"rotiserie",
+	"saute",
+	"sear",
+	"simmer",
+	"smoke",
+	"steam",
+	"stew",
+	"stir fry",
 	"wok"
-}
-}
+]
