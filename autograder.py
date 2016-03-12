@@ -10,7 +10,7 @@ from collections import Counter
 # init is an optional flag to indicate you're starting
 # over; old autograder results are written over and column
 # headers are printed to the file.
-team = "3"
+team = "0"
 init = False
 for arg in sys.argv:
     if arg == "init":
@@ -97,7 +97,7 @@ def main(team, init=False):
 
     cnt = 1
 
-    for answer in (get_file(fn) for fn in glob.iglob('../Recipes/*.json')):
+    for answer in (get_file(fn) for fn in glob.iglob('Recipes/*.json')):
         stud = getattr(api, "autograder")(answer['url'])
         temp = Counter(dict(zip(keys, [0]*len(keys))))
 
@@ -112,7 +112,7 @@ def main(team, init=False):
             temp['ingredients'] = check_ingredients(answer['ingredients'], stud)/float(answer['max']['ingredients'])
             scores += temp
             print "%s\t%s\t%s\t%s\t%s" % ("Recipe", 'Ingredients', 'Primary Method', 'Methods', 'Tools')
-            print "Recipe %d:\t%.3f\t%d\t%.3f\t%.3f" % (cnt, temp['ingredients'], temp['primary cooking method'], temp['cooking methods'], tmptool)
+            print "Recipe %d:\t%.3f\t%d\t%.3f\t%.3f" % (cnt, temp['ingredients'], temp['primary cooking method'], temp['cooking methods'], temp['cooking tools'])
             cnt += 1
         else:
             print "student answer formatting error"
