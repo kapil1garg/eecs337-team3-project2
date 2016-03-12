@@ -1,0 +1,55 @@
+{"diet-transforms" : 
+	
+		{
+			"toOmnivore" :
+				{"ground" : ["ground beef"],
+				"delicate" : ["chicken", "sausage"],
+				"moderate" : ["steak", "chicken", "pork"],
+				"firm" : ["steak", "chicken", "pork"],
+				"burger" : ["ground beef", "ground bison", "chicken"],
+				"hot dog" : ["hot dog"],
+				"broth" : ["chicken broth", "beef broth"]}
+		,
+			"toPescatarian" :
+				{"ground" : ["tilapia"],
+				"delicate" : ["cod", "whitefish", "oyster", "mussel"],
+				"moderate" : ["trout", "mullet", "tilapia"],
+				"firm" : ["mahi mahi", "tuna", "swordfish"],
+				"burger" : ["salmon burger", "tuna burger"],
+				"hot dog" : ["tofu dog"],
+				"broth" : ["fish broth"]}
+		,
+			"toVegetarian" :
+				{"ground" : ["lentils", "black beans"],
+				"delicate" : ["tofu", "tempeh", "cauliflower", "jackfruit"],
+				"moderate" : ["tofu", "tempheh", "seitan", "jackfruit"],
+				"firm" : ["portobello mushroom", "cauliflower"],
+				"burger" : ["black bean burger", "cauliflower burger"],
+				"hot dog" : ["tofu dog"],
+				"broth" : ["vegetable broth"]}
+		,
+			"toVegan" :
+			
+				{"ground" : ["lentils", "black beans"],
+				"delicate" : ["tofu", "tempeh", "cauliflower", "jackfruit"],
+				"moderate" : ["tofu", "tempheh", "seitan", "jackfruit"],
+				"firm" : ["portobello mushroom", "cauliflower"],
+				"burger" : ["black bean burger", "cauliflower burger"],
+				"hot dog" : ["tofu dog"],
+				"broth" : ["vegetable broth"]}
+		,
+			"toVeganAnimalProducts" : 
+			{"milk":["soy milk", "almond milk", "hemp milk"],
+			"cream":["coconut cream", "silken tofu"],
+			"cheese":["vegan cheese"],
+			"butter":["vegan butter"],
+			"yogurt":["coconut yogurt", "rice yogurt"],
+			"gelato":["vegan gelato"],
+			"ice cream":["coconut ice cream", "soy ice cream"],
+			"custard":["coconut cream", "silken tofu"],
+			"dulce de leche":["coconut cream", "silken tofu"],
+			"egg":["tofu"],
+			"honey":["agave necter", "sugar"]}
+		}
+	
+}

@@ -41,7 +41,7 @@ def load_food_ingredients():
 
     # convert array of dictionaries to singular dictionary and export as json
     food_dict = parse_array_into_dict(food_items, 'name')
-    with io.open('food_db.json', 'w', encoding='utf-8') as outfile:
+    with io.open('data/food_db.json', 'w', encoding='utf-8') as outfile:
         outfile.write(json.dumps(food_dict, sort_keys=True, indent=4, ensure_ascii=False))
 
 def parse_array_into_dict(array, key_string):
