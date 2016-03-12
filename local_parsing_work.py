@@ -71,14 +71,16 @@ def parse_ingredient_others(raw_ingredient, current_measurement):
 	preparation = []
 	name_tag = 0 # 0 stands for initial status, 1 for name, 2 for end name
 	for word in words:
-		if 'NN' in word[1] and name_tag != 2:
+		if 'NN' in word[1] and name_tag != 2 or name_tag == 2 and 'JJ' in word[1]:
 			name_tag = 1
-			name.append(stemmer.stem(word[0]))
+			name.append(stemmer.stem(word[0])) # default method to stem the word, would be better to use dictionary
 		else:	
 			if word[1] == 'RB' or 'VB' in word[1]:
 				preparation.append(word[0])
-			elif 'JJ' in word[1]:
+			elif 'JJ' in word[1] and name_tag != 2:
 				descriptor.append(word[0])
+			elif 'CC' in word[1]:
+				name_tag = 0
 			if name_tag == 1:
 				name_tag == 2
 	return ' '.join(name), ' '.join(descriptor), ' '.join(preparation)
