@@ -6,9 +6,13 @@ import nltk
 import json
 from nltk.stem.porter import PorterStemmer
 
-ingredients_name_list = ["shallot"]
-ingredients_stop_words = ['strip']
+noun_stop_words = ['strips', 'strip']
+verb_stop_words = ['taste']
+other_stopwords = ['to', 'of', 'into', 'and', 'or']
 stemmer = PorterStemmer()
+stopwords = noun_stop_words+other_stopwords+verb_stop_words
+preparation_list = ['cut', 'slice', 'mix', 'chopped']
+
 
 URL = ["http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/",
 "http://allrecipes.com/recipe/42964/awesome-korean-steak/?internalSource=recipe%%20hub&referringId=17833&referringContentType=recipe%%20hub"
@@ -16,8 +20,14 @@ URL = ["http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSou
 
 
 def get_basic_ingredients():
-	basic_ingredients = []
-	return basic_ingredients
+	with open('ingredients.json') as filedata:
+		data = json.load(filedata)
+	data = data.keys()
+	basic_ingredients = [ingredient.lower() for ingredient in data]
+	split_ingredients = []
+	for ingredient in basic_ingredients:
+		split_ingredients = split_ingredients + ingredient.split()
+	return split_ingredients
 
 def parse_quantity(raw_ingredient):
 	# deal with fraction part 
@@ -37,13 +47,13 @@ def parse_quantity(raw_ingredient):
 		total = 'user-adjusted'
 	return total
 
-def parse_measurement(raw_ingredient):
+def parse_measurement(raw_ingredient, basic_ingredients):
 	# the default measurement
 	measurement = re.findall(r'\d (\w+) ', raw_ingredient)
 	# remove plural
 	if measurement:
 		measurement = re.findall(r'(\w+?)s?$', measurement[0])
-	if measurement and measurement[0] not in ingredients_name_list:
+	if measurement and measurement[0] not in basic_ingredients:
 		measurement = measurement[0]
 	else:
 		measurement = 'unit'
@@ -52,70 +62,100 @@ def parse_measurement(raw_ingredient):
 def remove_quantity_measurement_bracket(words, current_measurement):
 	new_words = []
 	bracket_tag = False
-	for word in words:
-		if word == '(':
-			bracket_tag = True
-		if word == ')':
-			bracket_tag = False
-		if word.isalpha() and current_measurement not in word and not bracket_tag:
-			new_words.append(word)
+	for sent in words:
+		sent_words = []
+		for word in sent:
+			if word == '(':
+				bracket_tag = True
+			if word == ')':
+				bracket_tag = False
+			if word.isalpha() and current_measurement not in word and not bracket_tag:
+				sent_words.append(word.lower())
+		new_words.append(sent_words)
 	return new_words
 
-def parse_ingredient_others(raw_ingredient, current_measurement):
-	words = nltk.word_tokenize(raw_ingredient)
+def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredients):
+	sents = raw_ingredient.split(',')
+	words = [nltk.word_tokenize(sent) for sent in sents]
 	words = remove_quantity_measurement_bracket(words, current_measurement)
-	words = nltk.pos_tag(words)
-	print words
+	# get the name of ingredient here
+	# since there are word and in basic_ingredients, we don't need to deal with this case
 	name = []
+	rests = []
+	has_name = True
+	for sent in words:
+		rest = []
+		contain_name = False
+		for word in sent:
+			if has_name and word in basic_ingredients:
+				name.append(word)
+				contain_name = True
+			elif has_name and word[:-1] in basic_ingredients:
+				name.append(word[:-1])
+				contain_name = True
+			elif word:
+				rest.append(word)
+		if contain_name:
+			has_name = False
+		if rest:
+			rests.append(rest)
 	descriptor = []
 	preparation = []
-	name_tag = 0 # 0 stands for initial status, 1 for name, 2 for end name
-	for word in words:
-		if 'NN' in word[1] and name_tag != 2 or name_tag == 2 and 'JJ' in word[1]:
-			name_tag = 1
-			name.append(stemmer.stem(word[0])) # default method to stem the word, would be better to use dictionary
-		else:	
-			if word[1] == 'RB' or 'VB' in word[1]:
+	prep_description = []
+	for sent in rests:
+		tagged_sent = nltk.pos_tag(sent)
+		for word in tagged_sent:
+			if word[0] in preparation_list or 'VB' in word[1] and word[0] not in verb_stop_words:
 				preparation.append(word[0])
-			elif 'JJ' in word[1] and name_tag != 2:
+			elif 'RB' in word[1]:
+				prep_description.append(word[0])
+			elif word[0] not in stopwords:
 				descriptor.append(word[0])
-			elif 'CC' in word[1]:
-				name_tag = 0
-			if name_tag == 1:
-				name_tag == 2
-	return ' '.join(name), ' '.join(descriptor), ' '.join(preparation)
 
-def parse_ingredient(raw_ingredient):
+	return ' '.join(name), ' '.join(descriptor), ' '.join(preparation), ' '.join(prep_description)
+
+def parse_ingredient(raw_ingredient, basic_ingredients):
 	# quantity
 	ingredient = {}
 	quantity = parse_quantity(raw_ingredient)
 	ingredient['quantity'] = quantity
 	# measurement
-	measurement = parse_measurement(raw_ingredient)
+	measurement = parse_measurement(raw_ingredient, basic_ingredients)
 	ingredient['measurement'] = measurement
 	# name, descriptor, preparation
-	name, descriptor, preparation = parse_ingredient_others(raw_ingredient, measurement)
+	name, descriptor, preparation, prep_description = parse_ingredient_others(raw_ingredient, measurement, basic_ingredients)
+	if not descriptor:
+		descriptor = 'none'
+	if not preparation:
+		preparation = 'none'
+	if not prep_description:
+		prep_description = 'none'
 	ingredient['name'] = name
 	ingredient['descriptor'] = descriptor
 	ingredient['preparation'] = preparation
+	ingredient['prep_description'] = prep_description
+	print "In Progress - Finish One Piece of Ingredient"
 	return ingredient
 
 
-def get_parsed_recipe(recipe):
+def get_parsed_recipe(recipe, basic_ingredients):
 	raw_ingredients = recipe['ingredients']
 	# parse the ingredient
 	ingredients = []
 	for raw_ingredient in  raw_ingredients:
-		ingredients.append(parse_ingredient(raw_ingredient))
+		ingredients.append(parse_ingredient(raw_ingredient, basic_ingredients))
 	recipe['ingredients'] = ingredients
+	# parse the tool
 
 	return recipe
 
 def main():
-	recipe = get_recipetext_from_html(URL[0])
+	basic_ingredients = get_basic_ingredients()
+	recipe = get_recipetext_from_html(URL[1])
 	print json.dumps(recipe, indent = 4)
-	recipe = get_parsed_recipe(recipe)
+	recipe = get_parsed_recipe(recipe, basic_ingredients)
 	print json.dumps(recipe, indent = 4)
+
 	return
 
 if __name__ == "__main__":
