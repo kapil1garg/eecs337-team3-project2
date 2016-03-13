@@ -19,6 +19,12 @@ URL = ["http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSou
 "http://allrecipes.com/recipe/7399/tres-leches-milk-cake/"
 ]
 
+def get_cooking_verbs():
+	with open('data/cooking-verbs_db.json') as filedata:
+		data = json.load(filedata)
+	data = data["cooking-verbs"]
+	return data
+
 
 def get_basic_ingredients():
 	with open('ingredients.json') as filedata:
@@ -130,16 +136,12 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
 	if special_quantity != 0:
 		ingredient['quantity'] = special_quantity
 
-
 	# measurement
 	measurement = parse_measurement(raw_ingredient, basic_ingredients)
 	ingredient['measurement'] = measurement
 	# measurement in brackets
 	if special_quantity != 0:
 		ingredient['measurement'] = ' '.join(re.findall(r'[a-z]+', brackets_content))
-
-
-
 
 	# name, descriptor, preparation
 	name, descriptor, preparation, prep_description = parse_ingredient_others(raw_ingredient, measurement, basic_ingredients)
@@ -156,14 +158,23 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
 	print "In Progress - Finish One Piece of Ingredient"
 	return ingredient
 
+def get_parsed_methods(directions, cooking_verbs):
+	methods = []
 
-def get_parsed_recipe(recipe, basic_ingredients):
+	return methods
+
+def get_parsed_recipe(recipe, basic_ingredients, cooking_verbs):
 	raw_ingredients = recipe['ingredients']
 	# parse the ingredient
 	ingredients = []
 	for raw_ingredient in  raw_ingredients:
 		ingredients.append(parse_ingredient(raw_ingredient, basic_ingredients))
 	recipe['ingredients'] = ingredients
+	
+	directions = recipe['directions']
+	# parse the method
+	recipe['cooking methods'] = get_parsed_methods(directions, cooking_verbs)
+
 	# parse the tool
 
 	return recipe
@@ -172,8 +183,12 @@ def main():
 	basic_ingredients = get_basic_ingredients()
 	recipe = get_recipetext_from_html(URL[2])
 	print json.dumps(recipe, indent = 4)
-	recipe = get_parsed_recipe(recipe, basic_ingredients)
+	'''
+	recipe = get_parsed_recipe(recipe, basic_ingredients, cooking_verbs)
 	print json.dumps(recipe, indent = 4)
+	'''
+	cooking_verbs = get_cooking_verbs()
+	print cooking_verbs
 
 	return
 
