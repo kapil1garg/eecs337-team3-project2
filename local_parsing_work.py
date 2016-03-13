@@ -25,7 +25,6 @@ def get_cooking_verbs():
 	data = data["cooking-verbs"]
 	return data
 
-
 def get_basic_ingredients():
 	with open('ingredients.json') as filedata:
 		data = json.load(filedata)
