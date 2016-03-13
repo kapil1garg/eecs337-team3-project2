@@ -6,7 +6,7 @@ import nltk
 import json
 from nltk.stem.porter import PorterStemmer
 
-noun_stop_words = ['strips', 'strip']
+noun_stop_words = ['strips', 'strip', 'can']
 verb_stop_words = ['taste']
 other_stopwords = ['to', 'of', 'into', 'and', 'or']
 stemmer = PorterStemmer()
@@ -15,7 +15,8 @@ preparation_list = ['cut', 'slice', 'mix', 'chopped']
 
 
 URL = ["http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/",
-"http://allrecipes.com/recipe/42964/awesome-korean-steak/?internalSource=recipe%%20hub&referringId=17833&referringContentType=recipe%%20hub"
+"http://allrecipes.com/recipe/42964/awesome-korean-steak/?internalSource=recipe%%20hub&referringId=17833&referringContentType=recipe%%20hub",
+"http://allrecipes.com/recipe/7399/tres-leches-milk-cake/"
 ]
 
 
@@ -115,13 +116,31 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
 	return ' '.join(name), ' '.join(descriptor), ' '.join(preparation), ' '.join(prep_description)
 
 def parse_ingredient(raw_ingredient, basic_ingredients):
+	# fisrtly get the content in brackets
+	brackets_content = re.findall(r'\((.*)\)', raw_ingredient)
 	# quantity
 	ingredient = {}
 	quantity = parse_quantity(raw_ingredient)
 	ingredient['quantity'] = quantity
+	# if the concrete anster is in the brackets
+	special_quantity = 0
+	if len(brackets_content)>0:
+		brackets_content = brackets_content[0]
+		special_quantity = parse_quantity(brackets_content)
+	if special_quantity != 0:
+		ingredient['quantity'] = special_quantity
+
+
 	# measurement
 	measurement = parse_measurement(raw_ingredient, basic_ingredients)
 	ingredient['measurement'] = measurement
+	# measurement in brackets
+	if special_quantity != 0:
+		ingredient['measurement'] = ' '.join(re.findall(r'[a-z]+', brackets_content))
+
+
+
+
 	# name, descriptor, preparation
 	name, descriptor, preparation, prep_description = parse_ingredient_others(raw_ingredient, measurement, basic_ingredients)
 	if not descriptor:
@@ -151,7 +170,7 @@ def get_parsed_recipe(recipe, basic_ingredients):
 
 def main():
 	basic_ingredients = get_basic_ingredients()
-	recipe = get_recipetext_from_html(URL[1])
+	recipe = get_recipetext_from_html(URL[2])
 	print json.dumps(recipe, indent = 4)
 	recipe = get_parsed_recipe(recipe, basic_ingredients)
 	print json.dumps(recipe, indent = 4)
