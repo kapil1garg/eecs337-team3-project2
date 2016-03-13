@@ -49,7 +49,8 @@
 			"custard":["coconut cream", "silken tofu"],
 			"dulce de leche":["coconut cream", "silken tofu"],
 			"egg":["tofu"],
-			"honey":["agave necter", "sugar"]}
+			"honey":["agave necter", "sugar"]},
+			"mayonaise":["vegan mayonaise", "avocado oil"]
 		}
 	
 }
