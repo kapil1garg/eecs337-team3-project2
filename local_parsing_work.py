@@ -4,16 +4,13 @@ import json
 import re
 
 import nltk
-from nltk.stem.porter import PorterStemmer
 from get_recipetext_from_html import get_recipetext_from_html
 
-noun_stop_words = ['strips', 'strip', 'can']
-verb_stop_words = ['taste']
-other_stopwords = ['to', 'of', 'into', 'and', 'or']
-stemmer = PorterStemmer()
-stopwords = noun_stop_words+other_stopwords+verb_stop_words
-preparation_list = ['cut', 'slice', 'mix', 'chopped']
-
+NOUN_STOP_WORDS = ['strips', 'strip', 'can']
+VERB_STOP_WORDS = ['taste']
+MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or']
+STOP_WORDS = set(NOUN_STOP_WORDS + MISC_STOP_WORDS + VERB_STOP_WORDS)
+PREPARATION_LIST = set(['cut', 'slice', 'mix', 'chopped'])
 
 URL = [
     'http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/',
@@ -37,11 +34,14 @@ def get_basic_ingredients():
         split_ingredients = split_ingredients + ingredient.split()
     return split_ingredients
 
+INGREDIENTS = get_basic_ingredients()
+COOKING_VERBS = get_cooking_verbs()
+
 def parse_quantity(raw_ingredient):
     # deal with fraction part
     fraction = re.findall(r'(\d+)/(\d+)', raw_ingredient)
     if fraction:
-        fraction = int(fraction[0][0])/ int(fraction[0][1])
+        fraction = int(fraction[0][0]) / int(fraction[0][1])
     else:
         fraction = 0.0
 
@@ -119,11 +119,11 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
     for sent in rests:
         tagged_sent = nltk.pos_tag(sent)
         for word in tagged_sent:
-            if word[0] in preparation_list or 'VB' in word[1] and word[0] not in verb_stop_words:
+            if word[0] in PREPARATION_LIST or 'VB' in word[1] and word[0] not in VERB_STOP_WORDS:
                 preparation.append(word[0])
             elif 'RB' in word[1]:
                 prep_description.append(word[0])
-            elif word[0] not in stopwords:
+            elif word[0] not in STOP_WORDS:
                 descriptor.append(word[0])
 
     return ' '.join(name), ' '.join(descriptor), ' '.join(preparation), ' '.join(prep_description)
@@ -167,15 +167,19 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
     ingredient['descriptor'] = descriptor
     ingredient['preparation'] = preparation
     ingredient['prep_description'] = prep_description
-    print "In Progress - Finish One Piece of Ingredient"
     return ingredient
 
 def get_parsed_methods(directions, cooking_verbs):
     methods = []
-
     return methods
 
-def get_parsed_recipe(recipe, basic_ingredients, cooking_verbs):
+def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None):
+    # check if optional values are None
+    if basic_ingredients is None:
+        basic_ingredients = INGREDIENTS
+    if cooking_verbs is None:
+        cooking_verbs = COOKING_VERBS
+
     raw_ingredients = recipe['ingredients']
 
     # parse the ingredient
@@ -189,16 +193,13 @@ def get_parsed_recipe(recipe, basic_ingredients, cooking_verbs):
     # parse the method
     recipe['cooking methods'] = get_parsed_methods(directions, cooking_verbs)
 
-    # parse the tool
+    # TODO: parse the tool
 
     return recipe
 
 def main():
-    basic_ingredients = get_basic_ingredients()
-    recipe = get_recipetext_from_html(URL[2])
-    cooking_verbs = get_cooking_verbs()
-
-    recipe = get_parsed_recipe(recipe, basic_ingredients, cooking_verbs)
+    recipe_url = get_recipetext_from_html(URL[2])
+    recipe = get_parsed_recipe(recipe_url)
     print json.dumps(recipe, indent=4)
 
 if __name__ == "__main__":
