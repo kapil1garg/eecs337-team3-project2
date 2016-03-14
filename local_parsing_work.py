@@ -18,6 +18,12 @@ URL = [
     'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/'
 ]
 
+def get_primary_methods():
+    with open('data/cooking-methods_db.json') as filedata:
+        data = json.load(filedata)
+    data = data["cooking-methods"]
+    return data
+
 def get_cooking_tools():
     with open('data/cooking-tools_db.json') as filedata:
         data = json.load(filedata)
@@ -43,6 +49,7 @@ def get_basic_ingredients():
 INGREDIENTS = get_basic_ingredients()
 COOKING_VERBS = get_cooking_verbs()
 COOKING_TOOLS = get_cooking_tools()
+PRIMARY_COOKING_METHODS = get_primary_methods()
 
 def parse_quantity(raw_ingredient):
     # deal with fraction part
@@ -176,7 +183,7 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
     ingredient['prep_description'] = prep_description
     return ingredient
 
-def get_parsed_methods(directions, cooking_verbs):
+def get_parsed_methods(directions, cooking_verbs, primary_methods):
     methods = []
     words = []
     bigrams = []
@@ -196,8 +203,19 @@ def get_parsed_methods(directions, cooking_verbs):
         for bigram in bigrams_per_sent:
             if ' '.join(bigram) in cooking_verbs:
                 methods.append(' '.join(bigram))
+    
+    p_methods = []
+    for method in methods:
+        if method in primary_methods:
+            p_methods.append(method)
 
-    return list(set(methods))
+    p_method = nltk.FreqDist(p_methods).most_common(1)
+    if p_method:
+        p_method = p_method[0][0]
+    else:
+        p_method = 'None'
+    methods = list(set(methods))
+    return methods, p_method
 
 def get_parsed_tools(directions, cooking_tools):
     tools = []
@@ -214,7 +232,7 @@ def get_parsed_tools(directions, cooking_tools):
                     break;
     return list(set(tools))
 
-def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None, cooking_tools=None):
+def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None, cooking_tools=None, primary_methods=None):
     # check if optional values are None
     if basic_ingredients is None:
         basic_ingredients = INGREDIENTS
@@ -222,6 +240,8 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None, cookin
         cooking_verbs = COOKING_VERBS
     if cooking_tools is None:
         cooking_tools = COOKING_TOOLS
+    if primary_methods is None:
+        primary_methods = PRIMARY_COOKING_METHODS
 
     raw_ingredients = recipe['ingredients']
 
@@ -234,7 +254,7 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None, cookin
     directions = recipe['directions']
 
     # parse the method
-    recipe['cooking methods'] = get_parsed_methods(directions, cooking_verbs)
+    recipe['cooking methods'], recipe['primary cooking methods'] = get_parsed_methods(directions, cooking_verbs, primary_methods)
 
     # parse the tool
     recipe['cooking tools'] = get_parsed_tools(directions, cooking_tools)
