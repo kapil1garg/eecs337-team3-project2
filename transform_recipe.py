@@ -21,21 +21,70 @@ def transformation_handler(recipe, transform_type):
     """
     Handler which calls transform_recipe with recipe and correct transformation dictionary
     """
-    pass
+    transformation = None
+    if transform_type == 'omnivore':
+        transformation = transform_recipe(recipe, [PLANT_TEXTURES], OMNIVORE_DICT)
+    elif transform_type == 'pescatarian':
+        transformation = transform_recipe(recipe, [MEAT_TEXTURES], PESC_DICT)
+    elif transform_type == 'vegetarian':
+        transformation = transform_recipe(recipe, [MEAT_TEXTURES, FISH_TEXTURES], VEGETARIAN_DICT)
+    elif transform_type == 'vegan':
+        transformation = transform_recipe(recipe, [MEAT_TEXTURES, FISH_TEXTURES], VEGAN_DICT,
+                                          vegan_case=True)
 
-def transform_recipe(recipe, transformation_dict):
+    return transformation
+
+def transform_recipe(recipe, texture_dicts, transformation_dict, vegan_case=False):
     """
     Transforms input recipe from current state into desired transformation via transformation_dict
     """
-    pass
+    substitutes = {}
+
+    for ingredient in recipe['ingredients']:
+        texture_value = None
+
+        # check if texture for ingredient exists
+        for texture_dict in texture_dicts:
+            for texture in texture_dict:
+                if texture in ingredient['name']:
+                    texture_value = texture_dict[texture]
+                    break
+            if texture_value is not None:
+                break
+
+        # if texture exists, change ingredient
+        if texture_value is not None:
+            viable_substitutions = transformation_dict[texture_value]
+            substitutes[ingredient['name']] = viable_substitutions
+
+        # check if vegan is requested, if so find substitutes
+        if vegan_case:
+            for food in VEGAN_ANIMAL_PRODUCTS_DICT:
+                if food in ingredient['name']:
+                    substitutes[ingredient['name']] = VEGAN_ANIMAL_PRODUCTS_DICT[food]
+    return substitutes
 
 def main():
-    print OMNIVORE_DICT
-    print MEAT_TEXTURES
-    for i in TEST_URLS:
-        print 'Parsing Recipe from ' + i
-        get_url_data = get_recipetext_from_html(i)
-        print json.dumps(ParseRecipe.get_parsed_recipe(get_url_data), indent=4)
+    current_recipe = TEST_URLS[0]
+
+    for current_recipe in TEST_URLS:
+        print 'Parsing Recipe from ' + current_recipe
+        recipe_from_url = get_recipetext_from_html(current_recipe)
+        parsed_recipe = ParseRecipe.get_parsed_recipe(recipe_from_url)
+
+        ingredient_list = []
+        for i in parsed_recipe['ingredients']:
+            ingredient_list.append(i['name'])
+        print 'List of ingredients: ' + ', '.join(ingredient_list)
+
+        pesc_subs = transformation_handler(recipe_from_url, 'pescatarian')
+        vegetarian_subs = transformation_handler(recipe_from_url, 'vegetarian')
+        vegan_subs = transformation_handler(recipe_from_url, 'vegan')
+
+        print 'Pescatarian substitutes: ' + str(pesc_subs)
+        print 'Vegetarian substitutes: ' + str(vegetarian_subs)
+        print 'Vegan substitutes: ' + str(vegan_subs)
+        print
 
 if __name__ == '__main__':
     main()
