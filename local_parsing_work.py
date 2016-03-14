@@ -18,6 +18,18 @@ URL = [
     'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/'
 ]
 
+def get_primary_methods():
+    with open('data/cooking-methods_db.json') as filedata:
+        data = json.load(filedata)
+    data = data["cooking-methods"]
+    return data
+
+def get_cooking_tools():
+    with open('data/cooking-tools_db.json') as filedata:
+        data = json.load(filedata)
+    data = data["cooking-tools"]
+    return data
+
 def get_cooking_verbs():
     with open('data/cooking-verbs_db.json') as filedata:
         data = json.load(filedata)
@@ -36,6 +48,8 @@ def get_basic_ingredients():
 
 INGREDIENTS = get_basic_ingredients()
 COOKING_VERBS = get_cooking_verbs()
+COOKING_TOOLS = get_cooking_tools()
+PRIMARY_COOKING_METHODS = get_primary_methods()
 
 def parse_quantity(raw_ingredient):
     # deal with fraction part
@@ -169,16 +183,66 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
     ingredient['prep_description'] = prep_description
     return ingredient
 
-def get_parsed_methods(directions, cooking_verbs):
+def get_parsed_methods(directions, cooking_verbs, primary_methods):
     methods = []
-    return methods
+    words = []
+    bigrams = []
+    for direction in directions:
+        words_per_sent = nltk.word_tokenize(direction)
+        words_per_sent = [word.lower() for word in words_per_sent if word.isalpha()]
+        bigrams_per_sent = list(nltk.bigrams(words_per_sent))
+        words.append(words_per_sent)
+        bigrams.append(bigrams_per_sent)
 
-def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None):
+    for words_per_sent in words:
+        for word in words_per_sent:
+            if word in cooking_verbs:
+                methods.append(word)
+
+    for bigrams_per_sent in bigrams:
+        for bigram in bigrams_per_sent:
+            if ' '.join(bigram) in cooking_verbs:
+                methods.append(' '.join(bigram))
+
+    p_methods = []
+    for method in methods:
+        if method in primary_methods:
+            p_methods.append(method)
+
+    p_method = nltk.FreqDist(p_methods).most_common(1)
+    if p_method:
+        p_method = p_method[0][0]
+    else:
+        p_method = 'None'
+    methods = list(set(methods))
+    return methods, p_method
+
+def get_parsed_tools(directions, cooking_tools):
+    tools = []
+    directions = ' '.join(directions)
+    for tool in cooking_tools:
+        for key in tool:
+            if key in directions:
+                tools.append(key)
+                continue
+            otherwords = tool[key]["verbs"] + tool[key]["alternatives"]
+            for otherword in otherwords:
+                if otherword in directions:
+                    tools.append(key)
+                    break
+    return list(set(tools))
+
+def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
+                      cooking_tools=None, primary_methods=None):
     # check if optional values are None
     if basic_ingredients is None:
         basic_ingredients = INGREDIENTS
     if cooking_verbs is None:
         cooking_verbs = COOKING_VERBS
+    if cooking_tools is None:
+        cooking_tools = COOKING_TOOLS
+    if primary_methods is None:
+        primary_methods = PRIMARY_COOKING_METHODS
 
     raw_ingredients = recipe['ingredients']
 
@@ -191,10 +255,11 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None):
     directions = recipe['directions']
 
     # parse the method
-    recipe['cooking methods'] = get_parsed_methods(directions, cooking_verbs)
+    recipe['cooking methods'], recipe['primary cooking methods'] = \
+        get_parsed_methods(directions, cooking_verbs, primary_methods)
 
-    # TODO: parse the tool
-
+    # parse the tool
+    recipe['cooking tools'] = get_parsed_tools(directions, cooking_tools)
     return recipe
 
 def main():
