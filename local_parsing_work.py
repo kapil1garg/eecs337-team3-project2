@@ -105,7 +105,6 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
                 name.append(word)
                 contain_name = True
             elif has_name and word[:-1] in basic_ingredients:
-                print word[:-1]
                 name.append(word[:-1])
                 contain_name = True
             elif word:
