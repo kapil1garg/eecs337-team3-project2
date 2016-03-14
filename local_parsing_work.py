@@ -203,7 +203,7 @@ def get_parsed_methods(directions, cooking_verbs, primary_methods):
         for bigram in bigrams_per_sent:
             if ' '.join(bigram) in cooking_verbs:
                 methods.append(' '.join(bigram))
-    
+
     p_methods = []
     for method in methods:
         if method in primary_methods:
@@ -229,10 +229,11 @@ def get_parsed_tools(directions, cooking_tools):
             for otherword in otherwords:
                 if otherword in directions:
                     tools.append(key)
-                    break;
+                    break
     return list(set(tools))
 
-def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None, cooking_tools=None, primary_methods=None):
+def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
+                      cooking_tools=None, primary_methods=None):
     # check if optional values are None
     if basic_ingredients is None:
         basic_ingredients = INGREDIENTS
@@ -254,7 +255,8 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None, cookin
     directions = recipe['directions']
 
     # parse the method
-    recipe['cooking methods'], recipe['primary cooking methods'] = get_parsed_methods(directions, cooking_verbs, primary_methods)
+    recipe['cooking methods'], recipe['primary cooking methods'] = \
+        get_parsed_methods(directions, cooking_verbs, primary_methods)
 
     # parse the tool
     recipe['cooking tools'] = get_parsed_tools(directions, cooking_tools)
