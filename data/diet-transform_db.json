@@ -1,180 +1,229 @@
 {
-    "diet-transforms":{
-        "toOmnivore":{
-            "ground":[
+    "diet-transforms": {
+        "toOmnivore": {
+            "ground": [
                 "ground beef"
             ],
-            "delicate":[
+            "delicate": [
                 "chicken",
                 "sausage"
             ],
-            "moderate":[
+            "moderate": [
                 "steak",
                 "chicken",
                 "pork"
             ],
-            "firm":[
+            "firm": [
                 "steak",
                 "chicken",
                 "pork"
             ],
-            "burger":[
+            "burger": [
                 "ground beef",
                 "ground bison",
                 "chicken"
             ],
-            "hot dog":[
+            "hot dog": [
                 "hot dog"
             ],
-            "broth":[
+            "broth": [
                 "chicken broth",
                 "beef broth"
             ]
         },
-        "toPescatarian":{
-            "ground":[
+        "toPescatarian": {
+            "ground": [
                 "tilapia"
             ],
-            "delicate":[
+            "delicate": [
                 "cod",
                 "whitefish",
                 "oyster",
                 "mussel"
             ],
-            "moderate":[
+            "moderate": [
                 "trout",
                 "mullet",
                 "tilapia"
             ],
-            "firm":[
+            "firm": [
                 "mahi mahi",
                 "tuna",
                 "swordfish"
             ],
-            "burger":[
+            "burger": [
                 "salmon burger",
                 "tuna burger"
             ],
-            "hot dog":[
+            "hot dog": [
                 "tofu dog"
             ],
-            "broth":[
+            "broth": [
                 "fish broth"
             ]
         },
-        "toVegetarian":{
-            "ground":[
+        "toVegetarian": {
+            "ground": [
                 "lentils",
                 "black beans"
             ],
-            "delicate":[
+            "delicate": [
                 "tofu",
                 "tempeh",
                 "cauliflower",
                 "jackfruit"
             ],
-            "moderate":[
+            "moderate": [
                 "tofu",
                 "tempheh",
                 "seitan",
                 "jackfruit"
             ],
-            "firm":[
+            "firm": [
                 "portobello mushroom",
                 "cauliflower"
             ],
-            "burger":[
+            "burger": [
                 "black bean burger",
                 "cauliflower burger"
             ],
-            "hot dog":[
+            "hot dog": [
                 "tofu dog"
             ],
-            "broth":[
+            "broth": [
                 "vegetable broth"
             ]
         },
-        "toVegan":{
-            "ground":[
+        "toVegan": {
+            "ground": [
                 "lentils",
                 "black beans"
             ],
-            "delicate":[
+            "delicate": [
                 "tofu",
                 "tempeh",
                 "cauliflower",
                 "jackfruit"
             ],
-            "moderate":[
+            "moderate": [
                 "tofu",
                 "tempheh",
                 "seitan",
                 "jackfruit"
             ],
-            "firm":[
+            "firm": [
                 "portobello mushroom",
                 "cauliflower"
             ],
-            "burger":[
+            "burger": [
                 "black bean burger",
                 "cauliflower burger"
             ],
-            "hot dog":[
+            "hot dog": [
                 "tofu dog"
             ],
-            "broth":[
+            "broth": [
                 "vegetable broth"
             ]
         },
-        "toVeganAnimalProducts":{
-            "milk":[
+        "toVeganAnimalProducts": {
+            "milk": [
                 "soy milk",
                 "almond milk",
                 "hemp milk"
             ],
-            "cream":[
+            "cream": [
                 "coconut cream",
                 "silken tofu"
             ],
-            "cheese":[
+            "cheese": [
                 "vegan cheese",
                 "nut based cheese"
             ],
-            "butter":[
+            "butter": [
                 "vegan butter"
             ],
-            "yogurt":[
+            "yogurt": [
                 "coconut yogurt",
                 "rice yogurt"
             ],
-            "gelato":[
+            "gelato": [
                 "vegan gelato"
             ],
-            "ice cream":[
+            "ice cream": [
                 "coconut ice cream",
                 "soy ice cream"
             ],
-            "custard":[
+            "custard": [
                 "coconut cream",
                 "silken tofu"
             ],
-            "dulce de leche":[
+            "dulce de leche": [
                 "coconut cream",
                 "silken tofu"
             ],
-            "egg":[
+            "egg": [
                 "tofu"
             ],
-            "honey":[
+            "honey": [
                 "agave necter",
                 "sugar"
             ],
-        	"mayonaise":[
-            "vegan mayonaise",
-            "avocado oil"
-        	],
-        	"ricotta":["crumbled feta cheese"],
-        	"havarti":["crumbled feta cheese"]
+            "mayonaise": [
+                "vegan mayonaise",
+                "avocado oil"
+            ],
+            "ricotta": [
+                "tofu ricotta"
+            ],
+            "havarti": [
+                "vegan cheese"
+            ]
+        },
+        "toLactoseFree": {
+            "milk": [
+                "lactose-free milk",
+                "soy milk",
+                "almond milk",
+                "hemp milk"
+            ],
+            "cream": [
+                "coconut cream",
+                "silken tofu"
+            ],
+            "cheese": [
+                "vegan cheese",
+                "nut based cheese"
+            ],
+            "butter": [
+                "vegan butter",
+                "dairy-free margarine"
+            ],
+            "yogurt": [
+                "coconut yogurt",
+                "rice yogurt"
+            ],
+            "gelato": [
+                "vegan gelato"
+            ],
+            "ice cream": [
+                "coconut ice cream",
+                "soy ice cream"
+            ],
+            "custard": [
+                "coconut cream",
+                "silken tofu"
+            ],
+            "dulce de leche": [
+                "coconut cream",
+                "silken tofu"
+            ],
+            "ricotta": [
+                "tofu ricotta"
+            ],
+            "havarti": [
+                "vegan cheese"
+            ]
         }
     }
 }
