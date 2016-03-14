@@ -10,7 +10,7 @@ NOUN_STOP_WORDS = ['strips', 'strip', 'can']
 VERB_STOP_WORDS = ['taste']
 MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or']
 STOP_WORDS = set(NOUN_STOP_WORDS + MISC_STOP_WORDS + VERB_STOP_WORDS)
-PREPARATION_LIST = set(['cut', 'slice', 'mix', 'chopped'])
+PREPARATION_LIST = set(['cut', 'slice', 'mix', 'chopped', 'minced'])
 
 URL = [
     'http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/',
@@ -105,6 +105,7 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
                 name.append(word)
                 contain_name = True
             elif has_name and word[:-1] in basic_ingredients:
+                print word[:-1]
                 name.append(word[:-1])
                 contain_name = True
             elif word:
@@ -119,7 +120,7 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
     for sent in rests:
         tagged_sent = nltk.pos_tag(sent)
         for word in tagged_sent:
-            if word[0] in PREPARATION_LIST or 'VB' in word[1] and word[0] not in VERB_STOP_WORDS:
+            if word[0] in PREPARATION_LIST or ('VB' in word[1] and word[0] not in VERB_STOP_WORDS):
                 preparation.append(word[0])
             elif 'RB' in word[1]:
                 prep_description.append(word[0])
