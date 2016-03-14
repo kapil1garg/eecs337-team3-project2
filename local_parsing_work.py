@@ -169,11 +169,11 @@ def get_parsed_recipe(recipe, basic_ingredients):
 	return recipe
 
 def main():
-	basic_ingredients = get_basic_ingredients()
-	recipe = get_recipetext_from_html(URL[2])
-	print json.dumps(recipe, indent = 4)
-	recipe = get_parsed_recipe(recipe, basic_ingredients)
-	print json.dumps(recipe, indent = 4)
+	#basic_ingredients = get_basic_ingredients()
+	#recipe = get_recipetext_from_html(URL[2])
+	#print json.dumps(recipe, indent = 4)
+	#recipe = get_parsed_recipe(recipe, basic_ingredients)
+	#print json.dumps(recipe, indent = 4)
 
 	return
 
