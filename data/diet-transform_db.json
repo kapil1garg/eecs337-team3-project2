@@ -224,6 +224,36 @@
             "havarti": [
                 "vegan cheese"
             ]
+        },
+        "toGlutenFree": {
+            "flour": [
+                "gluten-free flour"
+            ],
+            "breadcrumbs": [
+                "gluten-free breadcrumbs",
+                "corn meal"
+            ],
+            "granola": [
+                "gluten-free granola",
+                "gluten-free cereal"
+            ],
+            "cracker": [
+                "gluten-free cracker",
+                "gluten-free matzo"
+            ],
+            "tortilla": [
+                "corn tortilla"
+            ],
+            "noodles": [
+                "rice noodles"
+            ],
+            "pasta": [
+                "gluten-free pasta"
+            ],
+            "seitan": [
+                "tofu",
+                "moderately firm meat of your choice"
+            ]
         }
     }
 }
