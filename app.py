@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, session, flash
 from flask.ext.session import Session
 import os
+import random
 
 from local_parsing_work import *
+import transform_recipe as Transformer
 
 app = Flask(__name__)
 sess = Session()
@@ -61,7 +63,58 @@ def view_recipe():
 	healthDirection = session['healthDirection']
 	healthType = session['healthType']
 
-	return render_template('view_recipe.html', recipeURL=recipeURL, recipeDict=recipeDict, dietType=dietType, healthDirection=healthDirection, healthType=healthType)
+	substitutes = {}
+	if dietType != 'none':
+		if dietType == 'omnivore':
+			substitutes = Transformer.transformation_handler(recipeDict, 'omnivore')
+		elif dietType == 'pescatarian':
+			substitutes = Transformer.transformation_handler(recipeDict, 'pescatarian')
+		elif dietType == 'vegetarian':
+			substitutes = Transformer.transformation_handler(recipeDict, 'vegetarian')
+		elif dietType == 'vegan':
+			substitutes = Transformer.transformation_handler(recipeDict, 'vegan')
+
+	if substitutes:
+		
+		recipeDict = clean_dict(recipeDict, substitutes)
+
+	return render_template('view_recipe.html', recipeURL=recipeURL, recipeDict=recipeDict, dietType=dietType,
+							substitutes=substitutes, healthDirection=healthDirection, healthType=healthType)
+
+def clean_dict(recipeDict, substitutes):
+
+	for substitute in substitutes:
+
+		substitutes[substitute] = random.choice(substitutes[substitute])
+
+	# clean name
+	nameList = recipeDict['name'].split(" ")
+	name = []
+	for word in nameList:
+		if word in substitutes.keys():
+			name.append(substitutes[word])
+		else:
+			name.append(word)
+
+	recipeDict['name'] = " ".join(name)
+
+	# clean ingredients
+	for ingredient in recipeDict['ingredients']:
+		if ingredient['name'] in substitutes.keys():
+			ingredient['name'] = substitutes[ingredient['name']]
+
+	# clean directions
+	for i in range(len(recipeDict['directions'])):
+
+		for key in substitutes.keys():
+
+			if key in recipeDict['directions'][i]:
+				print "[NOAH] Found key: " + key
+				recipeDict['directions'][i] = substitutes[key].join(recipeDict['directions'][i].split(key))
+
+	return recipeDict
+
+
 
 if __name__ == '__main__':
 	app.secret_key = 'tangerine prophet'

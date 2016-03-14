@@ -137,7 +137,8 @@
                 "silken tofu"
             ],
             "cheese":[
-                "vegan cheese"
+                "vegan cheese",
+                "nut based cheese"
             ],
             "butter":[
                 "vegan butter"
@@ -167,11 +168,13 @@
             "honey":[
                 "agave necter",
                 "sugar"
-            ]
-        },
-        "mayonaise":[
+            ],
+        	"mayonaise":[
             "vegan mayonaise",
             "avocado oil"
-        ]
+        	],
+        	"ricotta":["crumbled feta cheese"],
+        	"havarti":["crumbled feta cheese"]
+        }
     }
 }

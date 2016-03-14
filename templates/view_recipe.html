@@ -3,25 +3,51 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h3>Parsed Recipe</h3>
+                <h1>Recipe: {{ recipeDict['name'] }}</h1>
                 <br>
-                <p>
-                    Recipe URL: {{ recipeURL }}
+                <strong>Ingredients:</strong>
+                <br>
+                {% for ingredient in recipeDict['ingredients'] %}
+                    <ul>
+                        <li><strong>{{ ingredient['name'] }}</strong>
+                            <ul>
+                                <li>Quantity: {{ ingredient['quantity'] }}</li>
+                                <li>Measurement: {{ ingredient['measurement'] }}</li>
+                                <li>Descriptor: {{ ingredient['descriptor'] }}</li>
+                                <li>Preparation: {{ ingredient['preparation'] }}</li>
+                                <li>Preparation Description: {{ ingredient['prep_description'] }}</li>
+                            </ul>
+                        </li>
+                    </ul>
                     <br>
-                    Recipe:<br>
-                    {{ recipeDict }}
-                    <br>
-                </p>
-                <p>
-                    Diet Type: {{ dietType }}
-                </p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <strong>Directions</strong>
+                <ul>
+                    {% for direction in recipeDict['directions'] %}
+                        <li>{{ direction }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                Diet Type: {{ dietType }}
+                <br><br>
+                Substitutions:<br>
+                {{ substitutes }}
+                <br>
                 <p>
                     Health Direction: {{ healthDirection }}
                     <br>
                     Health Type: {{ healthType }}
                 </p>
-            </div>
+                </div>
         </div>
     </div>
+
 
 {% endblock %}
