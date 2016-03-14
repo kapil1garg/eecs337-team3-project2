@@ -159,7 +159,7 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
 
 def get_parsed_methods(directions, cooking_verbs):
 	methods = []
-
+	
 	return methods
 
 def get_parsed_recipe(recipe, basic_ingredients, cooking_verbs):
