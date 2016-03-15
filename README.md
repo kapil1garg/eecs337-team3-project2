@@ -6,7 +6,8 @@ Recipe project for Team 3, built for Northwestern's EECS 337.
 Our project uses several third-party python dependencies. Below are instructions for setting up our project for use on your machine. 
 
 1. Clone repository and navigate to directory using command line
-2. Run the following to setup virtual environment and download dependencies:
+2. Make sure you have virtual environment installed: http://docs.python-guide.org/en/latest/dev/virtualenvs/
+3. Run the following to setup virtual environment and download dependencies:
 
 ```
 virtualenv venv
