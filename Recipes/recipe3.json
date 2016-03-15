@@ -12,7 +12,7 @@
         {
             "name": ["sea salt", "salt"],
             "quantity": [0.5],
-            "measurement": ["tablespoons","tablespoon"],
+            "measurement": ["teaspoons","teaspoon"],
             "descriptor": ["sea"],
             "preparation": [],
             "prep-description": [],

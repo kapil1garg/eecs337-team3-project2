@@ -7,9 +7,10 @@ import os
 import nltk
 from get_recipetext_from_html import get_recipetext_from_html
 
+CHICKEN_PARTS = ["breast", "tenderloin", "wing", "drummette", "wingette", "leg", "thigh", "drumstick", "giblets"]
 NOUN_STOP_WORDS = ['strips', 'strip', 'can']
-VERB_STOP_WORDS = ['taste']
-MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or']
+VERB_STOP_WORDS = ['taste', 'need', 'needed']
+MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or', 'as']
 ADJ_STOP_WORDS = ['small', 'big', 'boneless']
 STOP_WORDS = set(NOUN_STOP_WORDS + MISC_STOP_WORDS + VERB_STOP_WORDS)
 PREPARATION_LIST = set(['cut', 'slice', 'mix', 'chopped', 'minced'])
@@ -116,6 +117,8 @@ def remove_quantity_measurement_bracket(words, current_measurement):
                 bracket_tag = False
             if word.isalpha() and current_measurement not in word and not bracket_tag:
                 sent_words.append(word.lower())
+            if '-' in word:
+                sent_words.append(word.lower())
         new_words.append(sent_words)
     return new_words
 
@@ -137,7 +140,7 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
                 name.append(word)
                 contain_name = True
             elif has_name and word[:-1] in basic_ingredients:
-                name.append(word[:-1])
+                name.append(word)
                 contain_name = True
             elif word:
                 rest.append(word)
@@ -157,8 +160,14 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
                 prep_description.append(word[0])
             elif word[0] not in STOP_WORDS:
                 descriptor.append(word[0])
-    if not descriptor and name[0] not in FULL_INGREDIENTS:
+        if descriptor:
+            break
+
+    if not descriptor and name[0] not in FULL_INGREDIENTS and len(name)>1:
         descriptor.append(name[0])
+
+    if not descriptor and len(name)>1 and name[1] not in CHICKEN_PARTS and name[0]=='chicken':
+        descriptor.append('chicken')
 
     return ' '.join(name), ' '.join(descriptor), ' '.join(preparation), ' '.join(prep_description)
 
@@ -191,14 +200,6 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
     name, descriptor, preparation, prep_description = parse_ingredient_others(raw_ingredient,
                                                                               measurement,
                                                                               basic_ingredients)
-    '''
-    if not descriptor:
-        descriptor = 'none'
-    if not preparation:
-        preparation = 'none'
-    if not prep_description:
-        prep_description = 'none'
-    '''
     ingredient['name'] = name
     ingredient['descriptor'] = descriptor
     ingredient['preparation'] = preparation
