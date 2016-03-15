@@ -16,144 +16,128 @@ BASIC_INGREDIENTS = get_basic_ingredients()
 
 @app.route('/')
 def base():
-
-	return render_template('index.html')
+    return render_template('index.html')
 
 @app.route('/parse_recipes', methods=['GET', 'POST'])
 def parse_recipes():
+    if request.method == 'POST':
+        # HERE is where we will do all of the parsing and transforming
+        recipeURL = request.form.get('recipe-url')
+        session['recipeURL'] = recipeURL
 
-	if request.method == 'POST':
+        #dietDirection = request.form.get('diet-dir')
+        dietType = request.form.get('diet-opt')
+        session['dietType'] = dietType
 
-		# HERE is where we will do all of the parsing and transforming
-		recipeURL = request.form.get('recipe-url')
-		session['recipeURL'] = recipeURL
+        healthType = request.form.get('health-opt')
+        session['healthType'] = healthType
 
-		#dietDirection = request.form.get('diet-dir')
-		dietType = request.form.get('diet-opt')
-		session['dietType'] = dietType
-
-		healthType = request.form.get('health-opt')
-		session['healthType'] = healthType
-
-		easyDIY = request.form.get('easy-diy')
-		session['easy diy'] = easyDIY is not None
+        easyDIY = request.form.get('easy-diy')
+        session['easy diy'] = easyDIY is not None
 
 
-		recipeText = get_recipetext_from_html(recipeURL)
-		recipeDict = get_parsed_recipe(recipeText, BASIC_INGREDIENTS)
+        recipeText = get_recipetext_from_html(recipeURL)
+        recipeDict = get_parsed_recipe(recipeText, BASIC_INGREDIENTS)
 
-		session['recipeDict'] = recipeDict
+        session['recipeDict'] = recipeDict
 
-		return redirect(url_for('view_recipe'))
+        return redirect(url_for('view_recipe'))
 
-	return render_template('parse_recipes.html')
+    return render_template('parse_recipes.html')
 
 @app.route('/view_recipe')
 def view_recipe():
+    recipeURL = session['recipeURL']
+    recipeDict = session['recipeDict']
 
-	recipeURL = session['recipeURL']
+    origRecipeDict = copy.deepcopy(recipeDict)
 
-	recipeDict = session['recipeDict']
+    #dietDirection = session['dietDirection']
+    dietType = session['dietType']
 
-	origRecipeDict = copy.deepcopy(recipeDict)
+    #healthDirection = session['healthDirection']
+    healthType = session['healthType']
 
-	#dietDirection = session['dietDirection']
-	dietType = session['dietType']
+    easyDIY = session['easy diy']
 
-	#healthDirection = session['healthDirection']
-	healthType = session['healthType']
+    dietSubstitutes = {}
+    if dietType != 'none':
+        if dietType == 'omnivore':
+            dietSubstitutes = Transformer.transformation_handler(recipeDict, 'omnivore')
+        elif dietType == 'pescatarian':
+            dietSubstitutes = Transformer.transformation_handler(recipeDict, 'pescatarian')
+        elif dietType == 'vegetarian':
+            dietSubstitutes = Transformer.transformation_handler(recipeDict, 'vegetarian')
+        elif dietType == 'vegan':
+            dietSubstitutes = Transformer.transformation_handler(recipeDict, 'vegan')
+        elif dietType == 'lactose free':
+            dietSubstitutes = Transformer.transformation_handler(recipeDict, 'lactose free')
+        elif dietType == 'gluten free':
+            dietSubstitutes = Transformer.transformation_handler(recipeDict, 'gluten free')
 
-	easyDIY = session['easy diy']
+    if dietSubstitutes:
+        recipeDict = clean_dict(recipeDict, dietSubstitutes)
 
-	dietSubstitutes = {}
-	if dietType != 'none':
-		if dietType == 'omnivore':
-			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'omnivore')
-		elif dietType == 'pescatarian':
-			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'pescatarian')
-		elif dietType == 'vegetarian':
-			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'vegetarian')
-		elif dietType == 'vegan':
-			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'vegan')
-		elif dietType == 'lactose free':
-			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'lactose free')
-		elif dietType == 'gluten free':
-			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'gluten free')
+    healthSubstitutes = {}
+    if healthType != 'none':
+        if healthType == 'low cal':
+            healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low cal')
+        elif healthType == 'low fat':
+            healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low fat')
+        elif healthType == 'low sodium':
+            healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low sodium')
+        elif healthType == 'low carb':
+            healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low carb')
+        elif healthType == 'low gi':
+            healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low gi')
 
-	if dietSubstitutes:
+    if healthSubstitutes:
+        recipeDict = clean_dict(recipeDict, healthSubstitutes)
 
-		recipeDict = clean_dict(recipeDict, dietSubstitutes)
+    easyDiySubstitutes = {}
+    if easyDIY:
+        easyDiySubstitutes = Transformer.transformation_handler(recipeDict, 'easy-to-diy')
 
-	healthSubstitutes = {}
-	if healthType != 'none':
-		if healthType == 'low cal':
-			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low cal')
-		elif healthType == 'low fat':
-			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low fat')
-		elif healthType == 'low sodium':
-			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low sodium')
-		elif healthType == 'low carb':
-			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low carb')
-		elif healthType == 'low gi':
-			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low gi')
+    if easyDiySubstitutes:
+        recipeDict = make_easy(recipeDict, easyDiySubstitutes)
 
-	if healthSubstitutes:
-		recipeDict = clean_dict(recipeDict, healthSubstitutes)
-
-
-	easyDiySubstitutes = {}
-	if easyDIY:
-		easyDiySubstitutes = Transformer.transformation_handler(recipeDict, 'easy-to-diy')
-
-	if easyDiySubstitutes:
-
-		recipeDict = make_easy(recipeDict, easyDiySubstitutes)
-
-	return render_template('view_recipe.html', recipeURL=recipeURL, origRecipeDict=origRecipeDict, recipeDict=recipeDict, dietType=dietType,
-							dietSubstitutes=dietSubstitutes, healthSubstitutes=healthSubstitutes, healthType=healthType, easyDIY=easyDIY)
+    return render_template('view_recipe.html', recipeURL=recipeURL, origRecipeDict=origRecipeDict, recipeDict=recipeDict, dietType=dietType,
+                            dietSubstitutes=dietSubstitutes, healthSubstitutes=healthSubstitutes, healthType=healthType, easyDIY=easyDIY)
 
 def clean_dict(recipeDict, substitutes):
+    for substitute in substitutes:
+        substitutes[substitute] = random.choice(substitutes[substitute])
 
-	for substitute in substitutes:
+    # clean name
+    nameList = recipeDict['name'].split(" ")
+    name = []
+    for word in nameList:
+        if word in substitutes.keys():
+            name.append(substitutes[word])
+        else:
+            name.append(word)
 
-		substitutes[substitute] = random.choice(substitutes[substitute])
+    recipeDict['name'] = " ".join(name)
 
-	# clean name
-	nameList = recipeDict['name'].split(" ")
-	name = []
-	for word in nameList:
-		if word in substitutes.keys():
-			name.append(substitutes[word])
-		else:
-			name.append(word)
+    # clean ingredients
+    for ingredient in recipeDict['ingredients']:
+        if ingredient['name'] in substitutes.keys():
+            ingredient['name'] = substitutes[ingredient['name']]
 
-	recipeDict['name'] = " ".join(name)
-
-	# clean ingredients
-	for ingredient in recipeDict['ingredients']:
-		if ingredient['name'] in substitutes.keys():
-			ingredient['name'] = substitutes[ingredient['name']]
-
-
-	return recipeDict
+    return recipeDict
 
 def make_easy(recipeDict, substitutes):
+    for ingredient in recipeDict['ingredients']:
+        if ingredient['name'] in substitutes.keys():
+            ingredient['name'] = '<a href=\"' + substitutes[ingredient['name']][0] + '\"" target=\"_blank\">' + 'DIY ' + ingredient['name'] + ' (click me!)</a>'
 
-	for ingredient in recipeDict['ingredients']:
-
-		if ingredient['name'] in substitutes.keys():
-
-			ingredient['name'] = '<a href=\"' + substitutes[ingredient['name']][0] + '\"" target=\"_blank\">' + 'DIY ' + ingredient['name'] + '</a>'
-
-	return recipeDict
-
-
+    return recipeDict
 
 if __name__ == '__main__':
-	app.secret_key = 'tangerine prophet'
-	app.config['SESSION_TYPE'] = 'filesystem'
+    app.secret_key = 'tangerine prophet'
+    app.config['SESSION_TYPE'] = 'filesystem'
 
-	sess.init_app(app)
-	app.debug = True
-	app.run()
+    sess.init_app(app)
+    app.debug = True
+    app.run()
 
