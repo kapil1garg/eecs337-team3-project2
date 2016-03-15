@@ -20,7 +20,8 @@ URL = [
     'http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/',
     'http://allrecipes.com/recipe/42964/awesome-korean-steak/?internalSource=recipe%%20hub&referringId=17833&referringContentType=recipe%%20hub',
     'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/',
-    'http://allrecipes.com/recipe/213742/meatball-nirvana/'
+    'http://allrecipes.com/recipe/213742/meatball-nirvana/',
+    'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
 ]
 
 def get_primary_methods():
@@ -41,6 +42,14 @@ def get_cooking_verbs():
     data = data["cooking-verbs"]
     return data
 
+def get_full_ingredients():
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/ingredients.json')) as filedata:
+        data = json.load(filedata)
+    data = data.keys()
+    basic_ingredients = [ingredient.lower() for ingredient in data]
+    return basic_ingredients
+
+
 def get_basic_ingredients():
     with open(os.path.join(CURRENT_WORKING_PATH,'data/ingredients.json')) as filedata:
         data = json.load(filedata)
@@ -52,6 +61,7 @@ def get_basic_ingredients():
     return split_ingredients
 
 INGREDIENTS = get_basic_ingredients()
+FULL_INGREDIENTS = get_full_ingredients()
 COOKING_VERBS = get_cooking_verbs()
 COOKING_TOOLS = get_cooking_tools()
 PRIMARY_COOKING_METHODS = get_primary_methods()
@@ -86,11 +96,6 @@ def parse_measurement(raw_ingredient, basic_ingredients):
     if measurement and len(measurement[0].split())>2:
         measurement = ""
 
-    # remove plural
-    if measurement:
-        measurement = re.findall(r'(\w+?)s?$', measurement[0])
-        if measurement == 'pound':
-            measurement = 'pounds'
     if measurement and measurement[0] not in basic_ingredients and measurement[0] not in ADJ_STOP_WORDS:
         measurement = measurement[0]
     else:
@@ -152,6 +157,8 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
                 prep_description.append(word[0])
             elif word[0] not in STOP_WORDS:
                 descriptor.append(word[0])
+    if not descriptor and name[0] not in FULL_INGREDIENTS:
+        descriptor.append(name[0])
 
     return ' '.join(name), ' '.join(descriptor), ' '.join(preparation), ' '.join(prep_description)
 
@@ -278,7 +285,7 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
     return recipe
 
 def main():
-    recipe_url = get_recipetext_from_html(URL[3])
+    recipe_url = get_recipetext_from_html(URL[4])
     recipe = get_parsed_recipe(recipe_url)
     print json.dumps(recipe, indent=4)
 
