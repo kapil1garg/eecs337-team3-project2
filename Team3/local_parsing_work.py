@@ -239,13 +239,11 @@ def get_parsed_methods(directions, cooking_verbs, primary_methods):
     else:
         p_method = 'None'
     methods = list(set(methods))
-    print methods
-    print p_method
     return methods, p_method
 
-def get_parsed_tools(directions, cooking_tools):
+def get_parsed_tools(raw_ingredients, directions, cooking_tools):
     tools = []
-    directions = ' '.join(directions)
+    directions = ' '.join(directions+raw_ingredients)
     for tool in cooking_tools:
         for key in tool:
             if key in directions:
@@ -256,6 +254,7 @@ def get_parsed_tools(directions, cooking_tools):
                 if otherword in directions:
                     tools.append(key)
                     break
+    print list(set(tools))
     return list(set(tools))
 
 def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
@@ -285,7 +284,7 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
         get_parsed_methods(directions, cooking_verbs, primary_methods)
 
     # parse the tool
-    recipe['cooking tools'] = get_parsed_tools(directions, cooking_tools)
+    recipe['cooking tools'] = get_parsed_tools(raw_ingredients ,directions, cooking_tools)
     return recipe
 
 def main():

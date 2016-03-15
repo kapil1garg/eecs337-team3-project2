@@ -21,12 +21,40 @@
             }
         },
         {
+            "baking dish": {
+                "alternatives": [
+
+                ],
+                "verbs": [
+                ]
+            }
+        },
+        {
+            "baking sheet": {
+                "alternatives": [
+
+                ],
+                "verbs": [
+                ]
+            }
+        },
+        {
+            "baking pan": {
+                "alternatives": [
+
+                ],
+                "verbs": [
+                ]
+            }
+        },
+        {
             "baster": {
                 "alternatives": [
 
                 ],
                 "verbs": [
-                    "baste"
+                    "baste",
+                    "coat"
                 ]
             }
         },
@@ -79,6 +107,16 @@
         },
         {
             "bottle opener": {
+                "alternatives": [
+
+                ],
+                "verbs": [
+
+                ]
+            }
+        },
+        {
+            "microwave safe bowl": {
                 "alternatives": [
 
                 ],
@@ -338,6 +376,14 @@
             }
         },
         {
+            "skillet": {
+                "alternatives": [
+                ],
+                "verbs": [
+                ]
+            }
+        },
+        {
             "measuring cup": {
                 "alternatives": [
                     "measuring jug",
@@ -371,6 +417,16 @@
         },
         {
             "microwave": {
+                "alternatives": [
+
+                ],
+                "verbs": [
+
+                ]
+            }
+        },
+        {
+            "mixing bowl": {
                 "alternatives": [
 
                 ],
@@ -432,6 +488,15 @@
                 ],
                 "verbs": [
                     "grill"
+                ]
+            }
+        },
+        {
+            "loaf pan": {
+                "alternatives": [
+                ],
+                "verbs": [
+
                 ]
             }
         },
