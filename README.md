@@ -27,6 +27,14 @@ pip install -r requirements.txt
 4. Run `python app.py`
 5. In Chrome, navigate to `localhost:5000`
 
+## External Python Libraries
+These can also be found in the `requirements.txt` file used to install dependencies.
+- Flask
+- Flask-Session
+- lxml
+- nltk
+- urllib3
+
 ## Resources for Databases
 - Vegan substitutes:
   - http://veganoutreach.org/subs/
@@ -53,3 +61,9 @@ pip install -r requirements.txt
   - https://en.wikipedia.org/wiki/List_of_cooking_appliances
 - DIY recipes: http://allrecipes.com/recipes/17622/everyday-cooking/more-meal-
 - Cooking verbs: http://diannej.com/2013/100-verbs-for-recipes-from-julia-child/
+
+## Documentation and Methodology
+Please see the following files in the root of the repo for documentation:
+- Workflow Flowchart: WorkFlow.pdf
+- Recipe Representation Diagram: RecipeRepresentation.pdf
+- Knowledge Base Diagram: KnowledgeBase.pdf
