@@ -22,7 +22,9 @@
                 "imitation whipped cream"
             ],
             "sour cream": [
-                "plain low-fat yogurt"
+                "plain low-fat yogurt",
+                "greek yogurt",
+                "low-fat cottage cheese"
             ],
             "cream cheese": [
                 "neufchatel",
@@ -57,7 +59,7 @@
             ],
             "creamer": [
                 "low-fat (1%) milk",
-                "reduced-fat (2%) milk",
+                "reduced-fat (2%) milk"
             ],
             "ramen noodles": [
                 "rice noodles"
@@ -70,19 +72,427 @@
                 "crispy rice",
                 "cooked grits",
                 "reduced-fat granola"
+            ],
+            "bologna": [
+                "low-fat bologna"
+            ],
+            "hot dog": [
+                "low-fat hot dog"
+            ],
+            "bacon": [
+                "canadian bacon",
+                "lean ham"
+            ],
+            "chorizo sausage": [
+                "turkey sausage",
+                "tofu sausage"
+            ],
+            "sausage": [
+                "canadian bacon",
+                "lean ham"
+            ],
+            "ground beef": [
+                "ground round-cut beef",
+                "ground turkey"
+            ],
+            "tuna": [
+                "water-packed tuna"
+            ],
+            "pork": [
+                "pork tenderloin",
+                "lean smoked ham"
+            ],
+            "egg": [
+                "egg white",
+                "egg substitute"
+            ],
+            "croissant": [
+                "hard french roll"
+            ],
+            "bread roll": [
+                "english muffin"
+            ],
+            "butter": [
+                "whipped butter",
+                "margarine",
+                "avocado puree",
+                "olive oil"
+            ],
+            "mayonnaise": [
+                "light mayonnaise",
+                "greek yogurt"
+            ],
+            "fudge sauce": [
+                "chocolate syrup"
+            ],
+            "flour": [
+                "whole-wheat flour",
+                "pureed black beans"
+            ],
+            "sugar": [
+                "stevia",
+                "maple syrup",
+                "agave syrup"
+            ],
+            "puffed white rice": [
+                "brown puffed rice"
+            ],
+            "frosting": [
+                "marshmallow fluff"
+            ],
+            "chocolate chips": [
+                "cacao nibs"
+            ],
+            "couscous": [
+                "quinoa"
+            ],
+            "pasta": [
+                "wheat pasta",
+                "zucchini ribbons",
+                "spaghetti squash"
+            ],
+            "mashed potatoes": [
+                "mashed turnips",
+                "mashed cauliflower"
+            ],
+            "rice": [
+                "grated steamed cauliflower"
+            ],
+            "breadcrumbs": [
+                "rolled oats",
+                "crushed flax"
+            ],
+            "tortilla": [
+                "lettuce wrap",
+                "corn tortilla"
+            ],
+            "oatmeal": [
+                "quinoa"
+            ],
+            "red wine": [
+                "white wine"
             ]
         },
         "toLowFat": {
-
+            "evaporated milk": [
+                "evaporated fat-free (skim) milk",
+                "evaporated reduced-fat (2%) milk"
+            ],
+            "milk": [
+                "fat-free (skim) milk",
+                "low-fat (1%) milk",
+                "reduced-fat (2%) milk"
+            ],
+            "ice cream": [
+                "sorbet",
+                "sherbet",
+                "low-fat frozen yogurt",
+                "fat-free frozen yogurt",
+                "low-fat ice cream",
+                "fat-free ice cream"
+            ],
+            "whipping cream": [
+                "imitation whipped cream"
+            ],
+            "sour cream": [
+                "plain low-fat yogurt",
+                "greek yogurt",
+                "low-fat cottage cheese"
+            ],
+            "cream cheese": [
+                "neufchatel",
+                "light cream cheese",
+                "fat-free cream cheese"
+            ],
+            "cheddar cheese": [
+                "fat-free cheddar cheese",
+                "reduced-calorie cheddar cheese",
+                "low-calorie cheddar cheese"
+            ],
+            "swiss cheese": [
+                "fat-free swiss cheese",
+                "reduced-calorie swiss cheese",
+                "low-calorie swiss cheese"
+            ],
+            "jack cheese": [
+                "fat-free jack cheese",
+                "reduced-calorie jack cheese",
+                "low-calorie jack cheese"
+            ],
+            "cottage cheese": [
+                "low-fat (1%) cottage cheese",
+                "reduced-fat (2%) cottage cheese"
+            ],
+            "mozzarella cheese": [
+                "part-skim mozzarella cheese",
+                "low-moisture mozzarella cheese"
+            ],
+            "ricotta cheese": [
+                "part-skim ricotta cheese"
+            ],
+            "creamer": [
+                "low-fat (1%) milk",
+                "reduced-fat (2%) milk"
+            ],
+            "ramen noodles": [
+                "rice noodles"
+            ],
+            "alfredo sauce": [
+                "tomato pasta sauce"
+            ],
+            "granola": [
+                "bran flakes",
+                "crispy rice",
+                "cooked grits",
+                "reduced-fat granola"
+            ],
+            "bologna": [
+                "low-fat bologna"
+            ],
+            "hot dog": [
+                "low-fat hot dog"
+            ],
+            "bacon": [
+                "canadian bacon",
+                "lean ham"
+            ],
+            "chorizo sausage": [
+                "turkey sausage",
+                "tofu sausage"
+            ],
+            "sausage": [
+                "canadian bacon",
+                "lean ham"
+            ],
+            "ground beef": [
+                "ground round-cut beef",
+                "ground turkey"
+            ],
+            "tuna": [
+                "water-packed tuna"
+            ],
+            "pork": [
+                "pork tenderloin",
+                "lean smoked ham"
+            ],
+            "egg": [
+                "egg white",
+                "egg substitute"
+            ],
+            "croissant": [
+                "hard french roll"
+            ],
+            "bread roll": [
+                "english muffin"
+            ],
+            "butter": [
+                "whipped butter",
+                "margarine",
+                "avocado puree",
+                "olive oil"
+            ],
+            "mayonnaise": [
+                "light mayonnaise",
+                "greek yogurt"
+            ],
+            "fudge sauce": [
+                "chocolate syrup"
+            ]
         },
         "toLowSodium": {
-
+            "baking soda": [
+                "potassium bicarbonate",
+                "sodium free baking soda"
+            ],
+            "baking powder": [
+                "low sodium baking powder"
+            ],
+            "ketchup": [
+                "low sodium ketchup"
+            ],
+            "soy sauce": [
+                "liquid aminos",
+                "low sodium soy sauce"
+            ],
+            "butter": [
+                "unsalted butter"
+            ],
+            "salt": [
+                "lemon juice",
+                "dried garlic",
+                "dried onion"
+            ],
+            "teriyaki sauce": [
+                "miso paste"
+            ],
+            "torilla": [
+                "corn tortilla",
+                "cabbage leaves"
+            ],
+            "mayonnaise": [
+                "plain soy yogurt",
+                "silken tofu"
+            ],
+            "chicken broth": [
+                "mushroom broth",
+                "low sodium chicken broth"
+            ],
+            "bouillon": [
+                "mushroom broth",
+                "low sodium chicken broth"
+            ],
+            "beef broth": [
+                "mushroom broth",
+                "low sodium beef broth"
+            ],
+            "chicken stock": [
+                "low sodium chicken stock"
+            ],
+            "beef stock": [
+                "low sodium beef stock"
+            ],
+            "olive": [
+                "baked grape",
+                "pickled cherry"
+            ],
+            "parmesan cheese": [
+                "nutritional yeast"
+            ],
+            "tomato sauce": [
+                "no salt added tomato sauce",
+                "low sodium tomato sauce"
+            ],
+            "buttermilk": [
+                "silken tofu"
+            ],
+            "black beans": [
+                "low sodium black beans"
+            ],
+            "beans": [
+                "low sodium beans"
+            ],
+            "cottage cheese": [
+                "greek yogurt",
+                "low sodium cottage cheese"
+            ],
+            "cereal": [
+                "oatmeal"
+            ],
+            "veggie burger": [
+                "black bean burger",
+                "cauliflower burger"
+            ]
         },
         "toLowCarb": {
-
+            "bread": [
+                "flax meal bread",
+                "low carb torilla"
+            ],
+            "torilla": [
+                "low carb torilla"
+            ],
+            "spaghetti": [
+                "spaghetti squash",
+                "zucchini noodles"
+            ],
+            "macaroni": [
+                "spaghetti squash",
+                "zucchini noodles"
+            ],
+            "pasta": [
+                "spaghetti squash",
+                "shirataki noodles",
+                "zucchini noodles"
+            ],
+            "cereal": [
+                "flax meal cereal",
+                "texurized vegetable protein oatmeal",
+                "cream of wheat"
+            ],
+            "oatmeal": [
+                "flax meal cereal",
+                "cream of wheat"
+            ],
+            "potatoes": [
+                "cauliflower",
+                "celery root"
+            ],
+            "rice": [
+                "cauliflower rice",
+                "celery root rice"
+            ],
+            "crackers": [
+                "low carb crackers",
+                "flax meal crackers",
+                "jicama"
+            ],
+            "black beans": [
+                "black soy beans"
+            ],
+            "flour": [
+                "almond flour",
+                "flax seed meal",
+                "coconut flour"
+            ],
+            "milk": [
+                "coconut milk",
+                "soy milk"
+            ],
+            "syrup": [
+                "raw maple syrup",
+                "agave syrup"
+            ],
+            "sugar": [
+                "stevia",
+                "maple syrup",
+                "agave syrup"
+            ],
+            "chocolate": [
+                "dark chocolate"
+            ],
+            "cornstarch": [
+                "cauliflower",
+                "sour cream"
+            ],
+            "corn": [
+                "quinoa",
+                "zucchini"
+            ]
         },
         "toLowGlycemicIndex": {
-
+            "cereal": [
+                "oatmeal"
+            ],
+            "cornflakes": [
+                "all bran",
+                "muesli"
+            ],
+            "rice krispies": [
+                "all bran",
+                "muesli"
+            ],
+            "white bread": [
+                "whole grain bread"
+            ],
+            "potato": [
+                "sweet potato"
+            ],
+            "rice": [
+                "wholegrain rice",
+                "basmati rice",
+                "brown rice"
+            ],
+            "milk chocolate": [
+                "dark chocolate"
+            ],
+            "pretzels": [
+                "walnuts"
+            ],
+            "sugar": [
+                "stevia",
+                "maple syrup",
+                "agave syrup"
+            ]
         }
     }
 }
