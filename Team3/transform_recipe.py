@@ -11,8 +11,9 @@ TEST_URLS = [
     'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/'
 ]
 
-OMNIVORE_DICT, PESC_DICT, VEGETARIAN_DICT, VEGAN_DICT, \
-    VEGAN_ANIMAL_PRODUCTS_DICT, LACTOSE_FREE_DICT, GLUTEN_FREE_DICT = DBImporter.get_db_transforms()
+OMNIVORE_DICT, PESC_DICT, VEGETARIAN_DICT, VEGAN_DICT, VEGAN_ANIMAL_PRODUCTS_DICT, \
+    LACTOSE_FREE_DICT, GLUTEN_FREE_DICT, LOW_CAL_DICT, LOW_FAT_DICT, LOW_SODIUM_DICT, \
+    LOW_CARB_DICT, LOW_GI_DICT = DBImporter.get_db_transforms()
 
 MEAT_TEXTURES, FISH_TEXTURES, PLANT_TEXTURES = DBImporter.get_db_food_textures()
 
@@ -22,36 +23,51 @@ def transformation_handler(recipe, transform_type):
     """
     transformation = None
     if transform_type == 'omnivore':
-        transformation = diet_transform_recipe(recipe,
-                                               texture_dicts=[PLANT_TEXTURES],
-                                               texture_transform_dict=OMNIVORE_DICT)
+        transformation = transform_recipe(recipe,
+                                          texture_dicts=[PLANT_TEXTURES],
+                                          texture_transform_dict=OMNIVORE_DICT)
     elif transform_type == 'pescatarian':
-        transformation = diet_transform_recipe(recipe,
-                                               texture_dicts=[MEAT_TEXTURES],
-                                               texture_transform_dict=PESC_DICT)
+        transformation = transform_recipe(recipe,
+                                          texture_dicts=[MEAT_TEXTURES],
+                                          texture_transform_dict=PESC_DICT)
     elif transform_type == 'vegetarian':
-        transformation = diet_transform_recipe(recipe,
-                                               texture_dicts=[MEAT_TEXTURES, FISH_TEXTURES],
-                                               texture_transform_dict=VEGETARIAN_DICT)
+        transformation = transform_recipe(recipe,
+                                          texture_dicts=[MEAT_TEXTURES, FISH_TEXTURES],
+                                          texture_transform_dict=VEGETARIAN_DICT)
     elif transform_type == 'vegan':
-        transformation = diet_transform_recipe(recipe,
-                                               texture_dicts=[MEAT_TEXTURES, FISH_TEXTURES],
-                                               texture_transform_dict=VEGAN_DICT,
-                                               food_transform_dict=VEGAN_ANIMAL_PRODUCTS_DICT)
+        transformation = transform_recipe(recipe,
+                                          texture_dicts=[MEAT_TEXTURES, FISH_TEXTURES],
+                                          texture_transform_dict=VEGAN_DICT,
+                                          food_transform_dict=VEGAN_ANIMAL_PRODUCTS_DICT)
     elif transform_type == 'lactose free':
-        transformation = diet_transform_recipe(recipe,
-                                               food_transform_dict=LACTOSE_FREE_DICT)
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=LACTOSE_FREE_DICT)
     elif transform_type == 'gluten free':
-        transformation = diet_transform_recipe(recipe,
-                                               food_transform_dict=GLUTEN_FREE_DICT)
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=GLUTEN_FREE_DICT)
+    elif transform_type == 'low cal':
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=LOW_CAL_DICT)
+    elif transform_type == 'low fat':
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=LOW_FAT_DICT)
+    elif transform_type == 'low sodium':
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=LOW_SODIUM_DICT)
+    elif transform_type == 'low carb':
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=LOW_CARB_DICT)
+    elif transform_type == 'low gi':
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=LOW_GI_DICT)
 
     return transformation
 
-def diet_transform_recipe(recipe, texture_dicts=None, texture_transform_dict=None,
-                          food_transform_dict=None):
+def transform_recipe(recipe, texture_dicts=None, texture_transform_dict=None,
+                     food_transform_dict=None):
     """
-    Transforms recipe based on diet constraint.
-    If given a texture dictionary, first makes texture-based substitutions then food based subs
+    Transforms recipe based on constraints given by texture and food dictionaries.
+    If given a texture dictionary, first makes texture-based substitutions then food based subs.
     """
     substitutes = {}
 
@@ -100,11 +116,22 @@ def main():
         lactose_subs = transformation_handler(recipe_from_url, 'lactose free')
         gluten_subs = transformation_handler(recipe_from_url, 'gluten free')
 
+        low_cal_subs = transformation_handler(recipe_from_url, 'low cal')
+        low_fat_subs = transformation_handler(recipe_from_url, 'low fat')
+        low_sodium_subs = transformation_handler(recipe_from_url, 'low sodium')
+        low_carb_subs = transformation_handler(recipe_from_url, 'low carb')
+        low_gi_subs = transformation_handler(recipe_from_url, 'low gi')
+
         print 'Pescatarian substitutes: ' + str(pesc_subs)
         print 'Vegetarian substitutes: ' + str(vegetarian_subs)
         print 'Vegan substitutes: ' + str(vegan_subs)
         print 'Lactose-free substitutes: ' + str(lactose_subs)
         print 'Gluten-free substitutes: ' + str(gluten_subs)
+        print 'Low cal substitutes: ' + str(low_cal_subs)
+        print 'Low fat substitutes: ' + str(low_fat_subs)
+        print 'Low sodium substitutes: ' + str(low_sodium_subs)
+        print 'Low carb substitutes: ' + str(low_carb_subs)
+        print 'Low gi substitutes: ' + str(low_gi_subs)
         print
 
 if __name__ == '__main__':
