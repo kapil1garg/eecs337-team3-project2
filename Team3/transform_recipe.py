@@ -13,7 +13,7 @@ TEST_URLS = [
 
 OMNIVORE_DICT, PESC_DICT, VEGETARIAN_DICT, VEGAN_DICT, VEGAN_ANIMAL_PRODUCTS_DICT, \
     LACTOSE_FREE_DICT, GLUTEN_FREE_DICT, LOW_CAL_DICT, LOW_FAT_DICT, LOW_SODIUM_DICT, \
-    LOW_CARB_DICT, LOW_GI_DICT = DBImporter.get_db_transforms()
+    LOW_CARB_DICT, LOW_GI_DICT, EASY_DIY_DICT = DBImporter.get_db_transforms()
 
 MEAT_TEXTURES, FISH_TEXTURES, PLANT_TEXTURES = DBImporter.get_db_food_textures()
 
@@ -60,6 +60,9 @@ def transformation_handler(recipe, transform_type):
     elif transform_type == 'low gi':
         transformation = transform_recipe(recipe,
                                           food_transform_dict=LOW_GI_DICT)
+    elif transform_type == 'easy-to-diy':
+        transformation = transform_recipe(recipe,
+                                          food_transform_dict=EASY_DIY_DICT)
 
     return transformation
 
@@ -110,28 +113,31 @@ def main():
             ingredient_list.append(i['name'])
         print 'List of ingredients: ' + ', '.join(ingredient_list)
 
-        pesc_subs = transformation_handler(recipe_from_url, 'pescatarian')
-        vegetarian_subs = transformation_handler(recipe_from_url, 'vegetarian')
-        vegan_subs = transformation_handler(recipe_from_url, 'vegan')
-        lactose_subs = transformation_handler(recipe_from_url, 'lactose free')
-        gluten_subs = transformation_handler(recipe_from_url, 'gluten free')
+        # pesc_subs = transformation_handler(recipe_from_url, 'pescatarian')
+        # vegetarian_subs = transformation_handler(recipe_from_url, 'vegetarian')
+        # vegan_subs = transformation_handler(recipe_from_url, 'vegan')
+        # lactose_subs = transformation_handler(recipe_from_url, 'lactose free')
+        # gluten_subs = transformation_handler(recipe_from_url, 'gluten free')
 
-        low_cal_subs = transformation_handler(recipe_from_url, 'low cal')
-        low_fat_subs = transformation_handler(recipe_from_url, 'low fat')
-        low_sodium_subs = transformation_handler(recipe_from_url, 'low sodium')
-        low_carb_subs = transformation_handler(recipe_from_url, 'low carb')
-        low_gi_subs = transformation_handler(recipe_from_url, 'low gi')
+        # low_cal_subs = transformation_handler(recipe_from_url, 'low cal')
+        # low_fat_subs = transformation_handler(recipe_from_url, 'low fat')
+        # low_sodium_subs = transformation_handler(recipe_from_url, 'low sodium')
+        # low_carb_subs = transformation_handler(recipe_from_url, 'low carb')
+        # low_gi_subs = transformation_handler(recipe_from_url, 'low gi')
 
-        print 'Pescatarian substitutes: ' + str(pesc_subs)
-        print 'Vegetarian substitutes: ' + str(vegetarian_subs)
-        print 'Vegan substitutes: ' + str(vegan_subs)
-        print 'Lactose-free substitutes: ' + str(lactose_subs)
-        print 'Gluten-free substitutes: ' + str(gluten_subs)
-        print 'Low cal substitutes: ' + str(low_cal_subs)
-        print 'Low fat substitutes: ' + str(low_fat_subs)
-        print 'Low sodium substitutes: ' + str(low_sodium_subs)
-        print 'Low carb substitutes: ' + str(low_carb_subs)
-        print 'Low gi substitutes: ' + str(low_gi_subs)
+        easy_diy_transform = transformation_handler(recipe_from_url, 'easy-to-diy')
+
+        # print 'Pescatarian substitutes: ' + str(pesc_subs)
+        # print 'Vegetarian substitutes: ' + str(vegetarian_subs)
+        # print 'Vegan substitutes: ' + str(vegan_subs)
+        # print 'Lactose-free substitutes: ' + str(lactose_subs)
+        # print 'Gluten-free substitutes: ' + str(gluten_subs)
+        # print 'Low cal substitutes: ' + str(low_cal_subs)
+        # print 'Low fat substitutes: ' + str(low_fat_subs)
+        # print 'Low sodium substitutes: ' + str(low_sodium_subs)
+        # print 'Low carb substitutes: ' + str(low_carb_subs)
+        # print 'Low gi substitutes: ' + str(low_gi_subs)
+        print 'Easy-to-DIY transformation: ' + str(easy_diy_transform)
         print
 
 if __name__ == '__main__':
