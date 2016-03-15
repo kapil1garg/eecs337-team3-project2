@@ -26,3 +26,30 @@ pip install -r requirements.txt
 3. Navgate to Team3 folder: `cd Team3/`
 4. Run `python app.py`
 5. In Chrome, navigate to `localhost:5000`
+
+## Resources for Databases
+- Vegan substitutes:
+  - http://veganoutreach.org/subs/
+  - https://en.wikipedia.org/wiki/List_of_meat_substitutes
+  - http://www.peta.org/living/beauty/animal-ingredients-list/
+- Pescatarian substitute: https://en.wikipedia.org/wiki/Fish_as_food
+- Omnivore substitute:
+  - https://en.wikipedia.org/wiki/List_of_beef_dishes
+  - http://www.hirschsmeats.com/cuts-of-meat.htm,
+- Lactose-free substitutes: http://www.todaysdietitian.com/newarchives/080112p38.
+- Gluten-free substitutes:
+  - https://glutenfreeworks.com/diet-and-health/food-
+  - http://www.dummies.com/how-to/content/glutenfree-grain
+- Low-calorie, low-fat substitutes: https://www.nhlbi.nih.gov/health/educational/
+- Low-sodium:
+  - http://greatist.com/health/21-lower-sodium-solutions
+  - http://www.goodhousekeeping.com/health/diet-nutrition/a18901/low-
+- Low-carb: http://www.bodybuilding.com/fun/the-ultimate-list-of-40-low-carb-
+- Creative low-calorie substitutes: http://greatist.com/health/83-healthy-recipe-
+- Low glycemic index: http://www.livestrong.com/article/401811-sugar-substitutes-
+- Food ingredients: http://www.food.com/about/
+- Cooking tools: 
+  - https://en.wikipedia.org/wiki/List_of_food_preparation_utensils
+  - https://en.wikipedia.org/wiki/List_of_cooking_appliances
+- DIY recipes: http://allrecipes.com/recipes/17622/everyday-cooking/more-meal-
+- Cooking verbs: http://diannej.com/2013/100-verbs-for-recipes-from-julia-child/
