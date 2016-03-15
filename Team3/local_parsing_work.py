@@ -10,6 +10,7 @@ from get_recipetext_from_html import get_recipetext_from_html
 NOUN_STOP_WORDS = ['strips', 'strip', 'can']
 VERB_STOP_WORDS = ['taste']
 MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or']
+ADJ_STOP_WORDS = ['small', 'big', 'boneless']
 STOP_WORDS = set(NOUN_STOP_WORDS + MISC_STOP_WORDS + VERB_STOP_WORDS)
 PREPARATION_LIST = set(['cut', 'slice', 'mix', 'chopped', 'minced'])
 
@@ -18,7 +19,8 @@ CURRENT_WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
 URL = [
     'http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/',
     'http://allrecipes.com/recipe/42964/awesome-korean-steak/?internalSource=recipe%%20hub&referringId=17833&referringContentType=recipe%%20hub',
-    'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/'
+    'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/',
+    'http://allrecipes.com/recipe/213742/meatball-nirvana/'
 ]
 
 def get_primary_methods():
@@ -72,21 +74,29 @@ def parse_quantity(raw_ingredient):
     # output correct total based on quantity (numeric value or user defined)
     total_quantity = fraction + integer
     if total_quantity == 0:
-        return 'user-adjusted'
+        return 0
     else:
         return total_quantity
 
 def parse_measurement(raw_ingredient, basic_ingredients):
     # the default measurement
     measurement = re.findall(r'\d (\w+) ', raw_ingredient)
+    
+    # for irregular measuremtn
+    if measurement and len(measurement[0].split())>2:
+        measurement = ""
 
     # remove plural
     if measurement:
         measurement = re.findall(r'(\w+?)s?$', measurement[0])
-    if measurement and measurement[0] not in basic_ingredients:
+        if measurement == 'pound':
+            measurement = 'pounds'
+    if measurement and measurement[0] not in basic_ingredients and measurement[0] not in ADJ_STOP_WORDS:
         measurement = measurement[0]
     else:
         measurement = 'unit'
+        if 'salt' in raw_ingredient or 'pepper' in raw_ingredient or 'parsley' in raw_ingredient:
+            measurement = 'to taste'
     return measurement
 
 def remove_quantity_measurement_bracket(words, current_measurement):
@@ -268,7 +278,7 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
     return recipe
 
 def main():
-    recipe_url = get_recipetext_from_html(URL[2])
+    recipe_url = get_recipetext_from_html(URL[3])
     recipe = get_parsed_recipe(recipe_url)
     print json.dumps(recipe, indent=4)
 
