@@ -1,6 +1,5 @@
 """Transforms recipe along specified parameter"""
 from __future__ import division
-import json
 
 from get_recipetext_from_html import get_recipetext_from_html
 import local_parsing_work as ParseRecipe
@@ -13,7 +12,7 @@ TEST_URLS = [
 ]
 
 OMNIVORE_DICT, PESC_DICT, VEGETARIAN_DICT, VEGAN_DICT, \
-    VEGAN_ANIMAL_PRODUCTS_DICT = DBImporter.get_db_transforms()
+    VEGAN_ANIMAL_PRODUCTS_DICT, LACTOSE_FREE_DICT, GLUTEN_FREE_DICT = DBImporter.get_db_transforms()
 
 MEAT_TEXTURES, FISH_TEXTURES, PLANT_TEXTURES = DBImporter.get_db_food_textures()
 
@@ -23,45 +22,63 @@ def transformation_handler(recipe, transform_type):
     """
     transformation = None
     if transform_type == 'omnivore':
-        transformation = transform_recipe(recipe, [PLANT_TEXTURES], OMNIVORE_DICT)
+        transformation = diet_transform_recipe(recipe,
+                                               texture_dicts=[PLANT_TEXTURES],
+                                               texture_transform_dict=OMNIVORE_DICT)
     elif transform_type == 'pescatarian':
-        transformation = transform_recipe(recipe, [MEAT_TEXTURES], PESC_DICT)
+        transformation = diet_transform_recipe(recipe,
+                                               texture_dicts=[MEAT_TEXTURES],
+                                               texture_transform_dict=PESC_DICT)
     elif transform_type == 'vegetarian':
-        transformation = transform_recipe(recipe, [MEAT_TEXTURES, FISH_TEXTURES], VEGETARIAN_DICT)
+        transformation = diet_transform_recipe(recipe,
+                                               texture_dicts=[MEAT_TEXTURES, FISH_TEXTURES],
+                                               texture_transform_dict=VEGETARIAN_DICT)
     elif transform_type == 'vegan':
-        transformation = transform_recipe(recipe, [MEAT_TEXTURES, FISH_TEXTURES], VEGAN_DICT,
-                                          vegan_case=True)
+        transformation = diet_transform_recipe(recipe,
+                                               texture_dicts=[MEAT_TEXTURES, FISH_TEXTURES],
+                                               texture_transform_dict=VEGAN_DICT,
+                                               food_transform_dict=VEGAN_ANIMAL_PRODUCTS_DICT)
+    elif transform_type == 'lactose free':
+        transformation = diet_transform_recipe(recipe,
+                                               food_transform_dict=LACTOSE_FREE_DICT)
+    elif transform_type == 'gluten free':
+        transformation = diet_transform_recipe(recipe,
+                                               food_transform_dict=GLUTEN_FREE_DICT)
 
     return transformation
 
-def transform_recipe(recipe, texture_dicts, transformation_dict, vegan_case=False):
+def diet_transform_recipe(recipe, texture_dicts=None, texture_transform_dict=None,
+                          food_transform_dict=None):
     """
-    Transforms input recipe from current state into desired transformation via transformation_dict
+    Transforms recipe based on diet constraint.
+    If given a texture dictionary, first makes texture-based substitutions then food based subs
     """
     substitutes = {}
 
     for ingredient in recipe['ingredients']:
-        texture_value = None
+        # convert ingredients by texture, if specified
+        if texture_dicts is not None:
+            texture_value = None
 
-        # check if texture for ingredient exists
-        for texture_dict in texture_dicts:
-            for texture in texture_dict:
-                if texture in ingredient['name']:
-                    texture_value = texture_dict[texture]
+            # check if texture for ingredient exists
+            for texture_dict in texture_dicts:
+                for texture in texture_dict:
+                    if texture in ingredient['name']:
+                        texture_value = texture_dict[texture]
+                        break
+                if texture_value is not None:
                     break
+
+            # if texture exists, change ingredient
             if texture_value is not None:
-                break
+                viable_substitutions = texture_transform_dict[texture_value]
+                substitutes[ingredient['name']] = viable_substitutions
 
-        # if texture exists, change ingredient
-        if texture_value is not None:
-            viable_substitutions = transformation_dict[texture_value]
-            substitutes[ingredient['name']] = viable_substitutions
-
-        # check if vegan is requested, if so find substitutes
-        if vegan_case:
-            for food in VEGAN_ANIMAL_PRODUCTS_DICT:
+        # convert ingredients by name, if specified
+        if food_transform_dict is not None:
+            for food in food_transform_dict:
                 if food in ingredient['name']:
-                    substitutes[ingredient['name']] = VEGAN_ANIMAL_PRODUCTS_DICT[food]
+                    substitutes[ingredient['name']] = food_transform_dict[food]
     return substitutes
 
 def main():
@@ -80,10 +97,14 @@ def main():
         pesc_subs = transformation_handler(recipe_from_url, 'pescatarian')
         vegetarian_subs = transformation_handler(recipe_from_url, 'vegetarian')
         vegan_subs = transformation_handler(recipe_from_url, 'vegan')
+        lactose_subs = transformation_handler(recipe_from_url, 'lactose free')
+        gluten_subs = transformation_handler(recipe_from_url, 'gluten free')
 
         print 'Pescatarian substitutes: ' + str(pesc_subs)
         print 'Vegetarian substitutes: ' + str(vegetarian_subs)
         print 'Vegan substitutes: ' + str(vegan_subs)
+        print 'Lactose-free substitutes: ' + str(lactose_subs)
+        print 'Gluten-free substitutes: ' + str(gluten_subs)
         print
 
 if __name__ == '__main__':
