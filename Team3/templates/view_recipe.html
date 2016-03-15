@@ -2,17 +2,21 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            {% if dietType!='none' and healthType!='none' %}
+            {% if dietType !='none' and healthType !='none' %}
                 <p style="color:red;">Warning: Multiple substitutes still in development.
                     Result may not be accurate...
                 </p>
             {% endif %}
-            {% if dietType!='none' or health!='none' or easyDIY%}
-                <div class="col-md-5">
+            {% if dietType!='none' or health !='none' or easyDIY%}
+                <div class="col-md-6">
             {% else %}
-                <div class="col-md-10">
+                <div class="col-md-12">
             {% endif %}
-                <h2>{{ origRecipeDict['name'] }} <small> original</small></h2>
+                <h2>
+                    {{ origRecipeDict['name'] }}
+                    <br>
+                    <small>original recipe</small>
+                </h2>
                 <br>
                 <strong>Ingredients:</strong>
                 <br>
@@ -32,24 +36,28 @@
                 {% endfor %}
             </div>
             {% if dietType!='none' or healthType!='none' or easyDIY %}
-            <div class="col-md-5">
-                <h2>{{ recipeDict['name'] }} <small>modified:
-                                                    {% if dietType != 'none' %}
-                                                        {{ dietType }}
-                                                    {% endif %}
-                                                    {% if dietType != 'none' and healthType != 'none'%}
-                                                        ,
-                                                    {% endif %}
-                                                    {% if healthType != 'none' %}
-                                                        {{ healthType }}
-                                                    {% endif %}
-                                                    {% if healthType != 'none' and easyDIY%}
-                                                        ,
-                                                    {% endif %}
-                                                    {% if easyDIY %}
-                                                        easy to DIY
-                                                    {% endif %}
-                                                    </small></h2>
+            <div class="col-md-6">
+                <h2>
+                    {{ recipeDict['name'] }}
+                    <br>
+                    <small>modifications:
+                            {% if dietType != 'none' %}
+                                {{ dietType }}
+                            {% endif %}
+                            {% if dietType != 'none' and healthType != 'none'%}
+                                ,
+                            {% endif %}
+                            {% if healthType != 'none' %}
+                                {{ healthType }}
+                            {% endif %}
+                            {% if healthType != 'none' and easyDIY%}
+                                ,
+                            {% endif %}
+                            {% if easyDIY %}
+                                easy to DIY
+                            {% endif %}
+                    </small>
+                </h2>
                 <br>
                 <strong>Ingredients:</strong>
                 <br>
@@ -71,26 +79,41 @@
             {% endif %}
         </div>
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <strong>Directions</strong>
-                <ul>
+                <ol>
                     {% for direction in origRecipeDict['directions'] %}
                         <li>{{ direction }}</li>
                     {% endfor %}
-                </ul>
+                </ol>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-md-10">
+            <h2>
+                ingredient transformations made
+            </h2>
+            <div class="col-md-12">
                 Diet Type: {{ dietType }}
+                <br>
+                Diet Substitutions:
+                <br>
+                {% for dietSubstitute in dietSubstitutes %}
+                    <ul>
+                        <li>{{ dietSubstitute }} &rarr; {{ dietSubstitutes[dietSubstitute] }}</li>
+                    </ul>
+                {% endfor %}
                 <br><br>
-                Diet Substitutions:<br>
-                {{ dietSubstitutes }}
-                <br><br><br>
+
                 Health Type: {{ healthType }}
-                <br><br>
-                Health Substitutes:<br>
-                {{ healthSubstitutes }}
+                <br>
+                Health Substitutes:
+                <br>
+                {% for healthSubstitute in healthSubstitutes %}
+                    <ul>
+                        <li>{{ healthSubstitute }} &rarr; {{ healthSubstitutes[healthSubstitute] }}</li>
+                    </ul>
+                {% endfor %}
                 <br><br>
             </div>
         </div>
