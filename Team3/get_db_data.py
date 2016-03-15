@@ -81,9 +81,15 @@ def get_db_transforms():
     to_low_carb = health_transform_dict['toLowCarb']
     to_low_gi = health_transform_dict['toLowGlycemicIndex']
 
+    # get easy-to-diy dictionary
+    with io.open('data/easy-to-diy_db.json') as datafile:
+        easy_diy_data = json.load(datafile)
+
+    easy_diy_dict = easy_diy_data['easy-to-diy']
+
     return (to_omnivore, to_pescatarian, to_vegetarian, to_vegan, to_vegan_animal_products, \
             to_lactose_free, to_gluten_free, \
-            to_low_calorie, to_low_fat, to_low_sodium, to_low_carb, to_low_gi)
+            to_low_calorie, to_low_fat, to_low_sodium, to_low_carb, to_low_gi, easy_diy_dict)
 
 def get_db_food_textures():
     with io.open('data/food-textures_db.json') as datafile:

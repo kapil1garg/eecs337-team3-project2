@@ -2,42 +2,57 @@
 from __future__ import division
 import json
 import re
+import os
 
 import nltk
 from get_recipetext_from_html import get_recipetext_from_html
 
+CHICKEN_PARTS = ["breast", "tenderloin", "wing", "drummette", "wingette", "leg", "thigh", "drumstick", "giblets"]
 NOUN_STOP_WORDS = ['strips', 'strip', 'can']
-VERB_STOP_WORDS = ['taste']
-MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or']
+VERB_STOP_WORDS = ['taste', 'need', 'needed']
+MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or', 'as']
+ADJ_STOP_WORDS = ['small', 'big', 'boneless']
 STOP_WORDS = set(NOUN_STOP_WORDS + MISC_STOP_WORDS + VERB_STOP_WORDS)
 PREPARATION_LIST = set(['cut', 'slice', 'mix', 'chopped', 'minced'])
+
+CURRENT_WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
 
 URL = [
     'http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/',
     'http://allrecipes.com/recipe/42964/awesome-korean-steak/?internalSource=recipe%%20hub&referringId=17833&referringContentType=recipe%%20hub',
-    'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/'
+    'http://allrecipes.com/recipe/7399/tres-leches-milk-cake/',
+    'http://allrecipes.com/recipe/213742/meatball-nirvana/',
+    'http://allrecipes.com/Recipe/Easy-Garlic-Broiled-Chicken/'
 ]
 
 def get_primary_methods():
-    with open('data/cooking-methods_db.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/cooking-methods_db.json')) as filedata:
         data = json.load(filedata)
     data = data["cooking-methods"]
     return data
 
 def get_cooking_tools():
-    with open('data/cooking-tools_db.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/cooking-tools_db.json')) as filedata:
         data = json.load(filedata)
     data = data["cooking-tools"]
     return data
 
 def get_cooking_verbs():
-    with open('data/cooking-verbs_db.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/cooking-verbs_db.json')) as filedata:
         data = json.load(filedata)
     data = data["cooking-verbs"]
     return data
 
+def get_full_ingredients():
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/ingredients.json')) as filedata:
+        data = json.load(filedata)
+    data = data.keys()
+    basic_ingredients = [ingredient.lower() for ingredient in data]
+    return basic_ingredients
+
+
 def get_basic_ingredients():
-    with open('data/ingredients.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/ingredients.json')) as filedata:
         data = json.load(filedata)
     data = data.keys()
     basic_ingredients = [ingredient.lower() for ingredient in data]
@@ -47,6 +62,7 @@ def get_basic_ingredients():
     return split_ingredients
 
 INGREDIENTS = get_basic_ingredients()
+FULL_INGREDIENTS = get_full_ingredients()
 COOKING_VERBS = get_cooking_verbs()
 COOKING_TOOLS = get_cooking_tools()
 PRIMARY_COOKING_METHODS = get_primary_methods()
@@ -69,21 +85,24 @@ def parse_quantity(raw_ingredient):
     # output correct total based on quantity (numeric value or user defined)
     total_quantity = fraction + integer
     if total_quantity == 0:
-        return 'user-adjusted'
+        return 0
     else:
         return total_quantity
 
 def parse_measurement(raw_ingredient, basic_ingredients):
     # the default measurement
     measurement = re.findall(r'\d (\w+) ', raw_ingredient)
+    
+    # for irregular measuremtn
+    if measurement and len(measurement[0].split())>2:
+        measurement = ""
 
-    # remove plural
-    if measurement:
-        measurement = re.findall(r'(\w+?)s?$', measurement[0])
-    if measurement and measurement[0] not in basic_ingredients:
+    if measurement and measurement[0] not in basic_ingredients and measurement[0] not in ADJ_STOP_WORDS:
         measurement = measurement[0]
     else:
         measurement = 'unit'
+        if 'salt' in raw_ingredient or 'pepper' in raw_ingredient or 'parsley' in raw_ingredient:
+            measurement = 'to taste'
     return measurement
 
 def remove_quantity_measurement_bracket(words, current_measurement):
@@ -97,6 +116,8 @@ def remove_quantity_measurement_bracket(words, current_measurement):
             if word == ')':
                 bracket_tag = False
             if word.isalpha() and current_measurement not in word and not bracket_tag:
+                sent_words.append(word.lower())
+            if '-' in word:
                 sent_words.append(word.lower())
         new_words.append(sent_words)
     return new_words
@@ -119,7 +140,7 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
                 name.append(word)
                 contain_name = True
             elif has_name and word[:-1] in basic_ingredients:
-                name.append(word[:-1])
+                name.append(word)
                 contain_name = True
             elif word:
                 rest.append(word)
@@ -139,6 +160,14 @@ def parse_ingredient_others(raw_ingredient, current_measurement, basic_ingredien
                 prep_description.append(word[0])
             elif word[0] not in STOP_WORDS:
                 descriptor.append(word[0])
+        if descriptor:
+            break
+
+    if not descriptor and name[0] not in FULL_INGREDIENTS and len(name)>1:
+        descriptor.append(name[0])
+
+    if not descriptor and len(name)>1 and name[1] not in CHICKEN_PARTS and name[0]=='chicken':
+        descriptor.append('chicken')
 
     return ' '.join(name), ' '.join(descriptor), ' '.join(preparation), ' '.join(prep_description)
 
@@ -171,22 +200,17 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
     name, descriptor, preparation, prep_description = parse_ingredient_others(raw_ingredient,
                                                                               measurement,
                                                                               basic_ingredients)
-    if not descriptor:
-        descriptor = 'none'
-    if not preparation:
-        preparation = 'none'
-    if not prep_description:
-        prep_description = 'none'
     ingredient['name'] = name
     ingredient['descriptor'] = descriptor
     ingredient['preparation'] = preparation
-    ingredient['prep_description'] = prep_description
+    ingredient['prep-description'] = prep_description
     return ingredient
 
 def get_parsed_methods(directions, cooking_verbs, primary_methods):
     methods = []
     words = []
     bigrams = []
+
     for direction in directions:
         words_per_sent = nltk.word_tokenize(direction)
         words_per_sent = [word.lower() for word in words_per_sent if word.isalpha()]
@@ -217,9 +241,9 @@ def get_parsed_methods(directions, cooking_verbs, primary_methods):
     methods = list(set(methods))
     return methods, p_method
 
-def get_parsed_tools(directions, cooking_tools):
+def get_parsed_tools(raw_ingredients, directions, cooking_tools):
     tools = []
-    directions = ' '.join(directions)
+    directions = ' '.join(directions+raw_ingredients)
     for tool in cooking_tools:
         for key in tool:
             if key in directions:
@@ -230,6 +254,7 @@ def get_parsed_tools(directions, cooking_tools):
                 if otherword in directions:
                     tools.append(key)
                     break
+    print list(set(tools))
     return list(set(tools))
 
 def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
@@ -255,15 +280,15 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
     directions = recipe['directions']
 
     # parse the method
-    recipe['cooking methods'], recipe['primary cooking methods'] = \
+    recipe['cooking methods'], recipe['primary cooking method'] = \
         get_parsed_methods(directions, cooking_verbs, primary_methods)
 
     # parse the tool
-    recipe['cooking tools'] = get_parsed_tools(directions, cooking_tools)
+    recipe['cooking tools'] = get_parsed_tools(raw_ingredients ,directions, cooking_tools)
     return recipe
 
 def main():
-    recipe_url = get_recipetext_from_html(URL[2])
+    recipe_url = get_recipetext_from_html(URL[4])
     recipe = get_parsed_recipe(recipe_url)
     print json.dumps(recipe, indent=4)
 
