@@ -81,7 +81,7 @@ def view_recipe():
 			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'gluten free')
 
 	if dietSubstitutes:
-		
+
 		recipeDict = clean_dict(recipeDict, dietSubstitutes)
 
 	healthSubstitutes = {}
@@ -143,7 +143,7 @@ def make_easy(recipeDict, substitutes):
 
 		if ingredient['name'] in substitutes.keys():
 
-			ingredient['name'] = '<a href=' + substitutes[ingredient['name']][0] + '>' + ingredient['name'] + '</a>'
+			ingredient['name'] = '<a href=\"' + substitutes[ingredient['name']][0] + '\"" target=\"_blank\">' + 'DIY ' + ingredient['name'] + '</a>'
 
 	return recipeDict
 
