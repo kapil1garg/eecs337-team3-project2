@@ -3,11 +3,11 @@
     <div class="container">
         <div class="row">
             {% if dietType!='none' and healthType!='none' %}
-                <p style="color:red;">Warning: Multiple substitutes still in development. 
+                <p style="color:red;">Warning: Multiple substitutes still in development.
                     Result may not be accurate...
                 </p>
             {% endif %}
-            {% if dietType!='none' or health!='none' %}
+            {% if dietType!='none' or health!='none' or easyDIY%}
                 <div class="col-md-5">
             {% else %}
                 <div class="col-md-10">
@@ -31,9 +31,9 @@
                     <br>
                 {% endfor %}
             </div>
-            {% if dietType!='none' or healthType!='none' %}
+            {% if dietType!='none' or healthType!='none' or easyDIY %}
             <div class="col-md-5">
-                <h2>{{ recipeDict['name'] }} <small>modified: 
+                <h2>{{ recipeDict['name'] }} <small>modified:
                                                     {% if dietType != 'none' %}
                                                         {{ dietType }}
                                                     {% endif %}
@@ -43,13 +43,19 @@
                                                     {% if healthType != 'none' %}
                                                         {{ healthType }}
                                                     {% endif %}
+                                                    {% if healthType != 'none' and easyDIY%}
+                                                        ,
+                                                    {% endif %}
+                                                    {% if easyDIY %}
+                                                        easy to DIY
+                                                    {% endif %}
                                                     </small></h2>
                 <br>
                 <strong>Ingredients:</strong>
                 <br>
                 {% for ingredient in recipeDict['ingredients'] %}
                     <ul>
-                        <li><strong>{{ ingredient['name'] }}</strong>
+                        <li><strong>{{ ingredient['name']|safe }}</strong>
                             <ul>
                                 <li>Quantity: {{ ingredient['quantity'] }}</li>
                                 <li>Measurement: {{ ingredient['measurement'] }}</li>
