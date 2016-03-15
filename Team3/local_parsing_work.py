@@ -2,6 +2,7 @@
 from __future__ import division
 import json
 import re
+import os
 
 import nltk
 from get_recipetext_from_html import get_recipetext_from_html
@@ -12,6 +13,8 @@ MISC_STOP_WORDS = ['to', 'of', 'into', 'and', 'or']
 STOP_WORDS = set(NOUN_STOP_WORDS + MISC_STOP_WORDS + VERB_STOP_WORDS)
 PREPARATION_LIST = set(['cut', 'slice', 'mix', 'chopped', 'minced'])
 
+CURRENT_WORKING_PATH = os.path.dirname(os.path.abspath(__file__))
+
 URL = [
     'http://allrecipes.com/recipe/240400/skillet-chicken-bulgogi/?internalSource=staff%%20pick&referringContentType=home%%20page/',
     'http://allrecipes.com/recipe/42964/awesome-korean-steak/?internalSource=recipe%%20hub&referringId=17833&referringContentType=recipe%%20hub',
@@ -19,25 +22,25 @@ URL = [
 ]
 
 def get_primary_methods():
-    with open('data/cooking-methods_db.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/cooking-methods_db.json')) as filedata:
         data = json.load(filedata)
     data = data["cooking-methods"]
     return data
 
 def get_cooking_tools():
-    with open('data/cooking-tools_db.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/cooking-tools_db.json')) as filedata:
         data = json.load(filedata)
     data = data["cooking-tools"]
     return data
 
 def get_cooking_verbs():
-    with open('data/cooking-verbs_db.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/cooking-verbs_db.json')) as filedata:
         data = json.load(filedata)
     data = data["cooking-verbs"]
     return data
 
 def get_basic_ingredients():
-    with open('data/ingredients.json') as filedata:
+    with open(os.path.join(CURRENT_WORKING_PATH,'data/ingredients.json')) as filedata:
         data = json.load(filedata)
     data = data.keys()
     basic_ingredients = [ingredient.lower() for ingredient in data]
@@ -171,16 +174,18 @@ def parse_ingredient(raw_ingredient, basic_ingredients):
     name, descriptor, preparation, prep_description = parse_ingredient_others(raw_ingredient,
                                                                               measurement,
                                                                               basic_ingredients)
+    '''
     if not descriptor:
         descriptor = 'none'
     if not preparation:
         preparation = 'none'
     if not prep_description:
         prep_description = 'none'
+    '''
     ingredient['name'] = name
     ingredient['descriptor'] = descriptor
     ingredient['preparation'] = preparation
-    ingredient['prep_description'] = prep_description
+    ingredient['prep-description'] = prep_description
     return ingredient
 
 def get_parsed_methods(directions, cooking_verbs, primary_methods):
@@ -255,7 +260,7 @@ def get_parsed_recipe(recipe, basic_ingredients=None, cooking_verbs=None,
     directions = recipe['directions']
 
     # parse the method
-    recipe['cooking methods'], recipe['primary cooking methods'] = \
+    recipe['cooking methods'], recipe['primary cooking method'] = \
         get_parsed_methods(directions, cooking_verbs, primary_methods)
 
     # parse the tool
