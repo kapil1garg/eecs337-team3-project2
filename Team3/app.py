@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, url_for, request, session, f
 from flask.ext.session import Session
 import os
 import random
+import copy
 
 from local_parsing_work import *
 import transform_recipe as Transformer
@@ -57,29 +58,52 @@ def view_recipe():
 
 	recipeDict = session['recipeDict']
 
+	origRecipeDict = copy.deepcopy(recipeDict)
+
 	#dietDirection = session['dietDirection']
 	dietType = session['dietType']
 
-	healthDirection = session['healthDirection']
+	#healthDirection = session['healthDirection']
 	healthType = session['healthType']
 
-	substitutes = {}
+	dietSubstitutes = {}
 	if dietType != 'none':
 		if dietType == 'omnivore':
-			substitutes = Transformer.transformation_handler(recipeDict, 'omnivore')
+			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'omnivore')
 		elif dietType == 'pescatarian':
-			substitutes = Transformer.transformation_handler(recipeDict, 'pescatarian')
+			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'pescatarian')
 		elif dietType == 'vegetarian':
-			substitutes = Transformer.transformation_handler(recipeDict, 'vegetarian')
+			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'vegetarian')
 		elif dietType == 'vegan':
-			substitutes = Transformer.transformation_handler(recipeDict, 'vegan')
+			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'vegan')
+		elif dietType == 'lactose free':
+			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'lactose free')
+		elif dietType == 'gluten free':
+			dietSubstitutes = Transformer.transformation_handler(recipeDict, 'gluten free')
 
-	if substitutes:
+	if dietSubstitutes:
 		
-		recipeDict = clean_dict(recipeDict, substitutes)
+		recipeDict = clean_dict(recipeDict, dietSubstitutes)
 
-	return render_template('view_recipe.html', recipeURL=recipeURL, recipeDict=recipeDict, dietType=dietType,
-							substitutes=substitutes, healthDirection=healthDirection, healthType=healthType)
+	healthSubstitutes = {}
+	if healthType != 'none':
+		if healthType == 'low cal':
+			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low cal')
+		elif healthType == 'low fat':
+			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low fat')
+		elif healthType == 'low sodium':
+			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low sodium')
+		elif healthType == 'low carb':
+			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low carb')
+		elif healthType == 'low gi':
+			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low gi')
+
+	if healthSubstitutes:
+
+		recipeDict = clean_dict(recipeDict, healthSubstitutes)
+
+	return render_template('view_recipe.html', recipeURL=recipeURL, origRecipeDict=origRecipeDict, recipeDict=recipeDict, dietType=dietType,
+							dietSubstitutes=dietSubstitutes, healthSubstitutes=healthSubstitutes, healthType=healthType)
 
 def clean_dict(recipeDict, substitutes):
 
@@ -103,14 +127,6 @@ def clean_dict(recipeDict, substitutes):
 		if ingredient['name'] in substitutes.keys():
 			ingredient['name'] = substitutes[ingredient['name']]
 
-	# clean directions
-	for i in range(len(recipeDict['directions'])):
-
-		for key in substitutes.keys():
-
-			if key in recipeDict['directions'][i]:
-				print "[NOAH] Found key: " + key
-				recipeDict['directions'][i] = substitutes[key].join(recipeDict['directions'][i].split(key))
 
 	return recipeDict
 

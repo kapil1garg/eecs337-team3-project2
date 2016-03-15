@@ -2,8 +2,48 @@
 {% block content %}
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h1>Recipe: {{ recipeDict['name'] }}</h1>
+            {% if dietType!='none' and healthType!='none' %}
+                <p style="color:red;">Warning: Multiple substitutes still in development. 
+                    Result may not be accurate...
+                </p>
+            {% endif %}
+            {% if dietType!='none' or health!='none' %}
+                <div class="col-md-5">
+            {% else %}
+                <div class="col-md-10">
+            {% endif %}
+                <h2>{{ origRecipeDict['name'] }} <small> original</small></h2>
+                <br>
+                <strong>Ingredients:</strong>
+                <br>
+                {% for ingredient in origRecipeDict['ingredients'] %}
+                    <ul>
+                        <li><strong>{{ ingredient['name'] }}</strong>
+                            <ul>
+                                <li>Quantity: {{ ingredient['quantity'] }}</li>
+                                <li>Measurement: {{ ingredient['measurement'] }}</li>
+                                <li>Descriptor: {{ ingredient['descriptor'] }}</li>
+                                <li>Preparation: {{ ingredient['preparation'] }}</li>
+                                <li>Preparation Description: {{ ingredient['prep_description'] }}</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <br>
+                {% endfor %}
+            </div>
+            {% if dietType!='none' or healthType!='none' %}
+            <div class="col-md-5">
+                <h2>{{ recipeDict['name'] }} <small>modified: 
+                                                    {% if dietType != 'none' %}
+                                                        {{ dietType }}
+                                                    {% endif %}
+                                                    {% if dietType != 'none' and healthType != 'none'%}
+                                                        ,
+                                                    {% endif %}
+                                                    {% if healthType != 'none' %}
+                                                        {{ healthType }}
+                                                    {% endif %}
+                                                    </small></h2>
                 <br>
                 <strong>Ingredients:</strong>
                 <br>
@@ -22,30 +62,31 @@
                     <br>
                 {% endfor %}
             </div>
+            {% endif %}
         </div>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="col-md-10">
                 <strong>Directions</strong>
                 <ul>
-                    {% for direction in recipeDict['directions'] %}
+                    {% for direction in origRecipeDict['directions'] %}
                         <li>{{ direction }}</li>
                     {% endfor %}
                 </ul>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="col-md-10">
                 Diet Type: {{ dietType }}
                 <br><br>
-                Substitutions:<br>
-                {{ substitutes }}
-                <br>
-                <p>
-                    Health Direction: {{ healthDirection }}
-                    <br>
-                    Health Type: {{ healthType }}
-                </p>
-                </div>
+                Diet Substitutions:<br>
+                {{ dietSubstitutes }}
+                <br><br><br>
+                Health Type: {{ healthType }}
+                <br><br>
+                Health Substitutes:<br>
+                {{ healthSubstitutes }}
+                <br><br>
+            </div>
         </div>
     </div>
 

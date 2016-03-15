@@ -97,42 +97,42 @@ def transform_recipe(recipe, texture_dicts=None, texture_transform_dict=None,
                     substitutes[ingredient['name']] = food_transform_dict[food]
     return substitutes
 
-def main():
-    current_recipe = TEST_URLS[0]
+#def main():
+    # current_recipe = TEST_URLS[0]
 
-    for current_recipe in TEST_URLS:
-        print 'Parsing Recipe from ' + current_recipe
-        recipe_from_url = get_recipetext_from_html(current_recipe)
-        parsed_recipe = ParseRecipe.get_parsed_recipe(recipe_from_url)
+    # for current_recipe in TEST_URLS:
+    #     print 'Parsing Recipe from ' + current_recipe
+    #     recipe_from_url = get_recipetext_from_html(current_recipe)
+    #     parsed_recipe = ParseRecipe.get_parsed_recipe(recipe_from_url)
 
-        ingredient_list = []
-        for i in parsed_recipe['ingredients']:
-            ingredient_list.append(i['name'])
-        print 'List of ingredients: ' + ', '.join(ingredient_list)
+    #     ingredient_list = []
+    #     for i in parsed_recipe['ingredients']:
+    #         ingredient_list.append(i['name'])
+    #     print 'List of ingredients: ' + ', '.join(ingredient_list)
 
-        pesc_subs = transformation_handler(recipe_from_url, 'pescatarian')
-        vegetarian_subs = transformation_handler(recipe_from_url, 'vegetarian')
-        vegan_subs = transformation_handler(recipe_from_url, 'vegan')
-        lactose_subs = transformation_handler(recipe_from_url, 'lactose free')
-        gluten_subs = transformation_handler(recipe_from_url, 'gluten free')
+    #     pesc_subs = transformation_handler(recipe_from_url, 'pescatarian')
+    #     vegetarian_subs = transformation_handler(recipe_from_url, 'vegetarian')
+    #     vegan_subs = transformation_handler(recipe_from_url, 'vegan')
+    #     lactose_subs = transformation_handler(recipe_from_url, 'lactose free')
+    #     gluten_subs = transformation_handler(recipe_from_url, 'gluten free')
 
-        low_cal_subs = transformation_handler(recipe_from_url, 'low cal')
-        low_fat_subs = transformation_handler(recipe_from_url, 'low fat')
-        low_sodium_subs = transformation_handler(recipe_from_url, 'low sodium')
-        low_carb_subs = transformation_handler(recipe_from_url, 'low carb')
-        low_gi_subs = transformation_handler(recipe_from_url, 'low gi')
+    #     low_cal_subs = transformation_handler(recipe_from_url, 'low cal')
+    #     low_fat_subs = transformation_handler(recipe_from_url, 'low fat')
+    #     low_sodium_subs = transformation_handler(recipe_from_url, 'low sodium')
+    #     low_carb_subs = transformation_handler(recipe_from_url, 'low carb')
+    #     low_gi_subs = transformation_handler(recipe_from_url, 'low gi')
 
-        print 'Pescatarian substitutes: ' + str(pesc_subs)
-        print 'Vegetarian substitutes: ' + str(vegetarian_subs)
-        print 'Vegan substitutes: ' + str(vegan_subs)
-        print 'Lactose-free substitutes: ' + str(lactose_subs)
-        print 'Gluten-free substitutes: ' + str(gluten_subs)
-        print 'Low cal substitutes: ' + str(low_cal_subs)
-        print 'Low fat substitutes: ' + str(low_fat_subs)
-        print 'Low sodium substitutes: ' + str(low_sodium_subs)
-        print 'Low carb substitutes: ' + str(low_carb_subs)
-        print 'Low gi substitutes: ' + str(low_gi_subs)
-        print
+    #     print 'Pescatarian substitutes: ' + str(pesc_subs)
+    #     print 'Vegetarian substitutes: ' + str(vegetarian_subs)
+    #     print 'Vegan substitutes: ' + str(vegan_subs)
+    #     print 'Lactose-free substitutes: ' + str(lactose_subs)
+    #     print 'Gluten-free substitutes: ' + str(gluten_subs)
+    #     print 'Low cal substitutes: ' + str(low_cal_subs)
+    #     print 'Low fat substitutes: ' + str(low_fat_subs)
+    #     print 'Low sodium substitutes: ' + str(low_sodium_subs)
+    #     print 'Low carb substitutes: ' + str(low_carb_subs)
+    #     print 'Low gi substitutes: ' + str(low_gi_subs)
+    #     print
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+#    main()
