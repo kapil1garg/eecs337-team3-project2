@@ -5,49 +5,45 @@
     <h2>Parse Recipe</h2>
     <br>
     <form id="recipe-form" action="" method="POST" enctype="multipart/form-data">
-		<div class="form-group">
-			<label for="recipe-url">Recipe Url:</label>
-				<input type="text" name="recipe-url"><br>
-		</div>
-		<div class="form-group">
-			<h4>Select a Diet Transformation:</h4>
-			<!--
-			<label for="diet-dir">Direction:</label><br>
-			<input type="radio" name="diet-dir" value="to" checked>To</input><br>
-			<input type="radio" name="diet-dir" value="from" checked>From</input><br><br>
-		-->
-			<br>
-			<label for="diet-opt">Diet Type:</label>
-			<select class="form-control" name="diet-opt" style="width:auto;">
-				<option value="none">None</option>
-				<option value="omnivore">Omnivore</option>
-				<option value="pescatarian">Pescatarian</option>
-				<option value="vegetarian">Vegetarian</option>
-				<option value="vegan">Vegan</option>
-				<option value="lactose free">Lactose Free</option>
-				<option value="gluten free">Gluten Free</option>
-			</select>
-		</div><br>
-	<div class="form-group">
-		<h4>Select a Health Transformation:</h4>
-		<label for="health-opt">Health Type:</label>
-		<select class="form-control" name="health-opt" style="width:auto;">
-			<option value="none">None</option>
-			<option value="low cal">Low-Cal</option>
-			<option value="low fat">Low-Fat</option>
-			<option value="low sodium">Low-Sodium</option>
-			<option value="low carb">Low-Carb</option>
-			<option value="low gi">Low-Glycemic Index</option>
-		</select>
-	</div>
-	<div class="form-group">
-		<h4>Easy to DIY?:</h4>
-		<input type="checkbox" name="easy-diy" value="easy-diy">Sure!
-		<br>
-		<br>
-	</div>
-	<input type="submit" class="btn btn-info" value="submit">
-	</form>
+        <div class="form-group">
+            <label for="recipe-url">Recipe Url:</label>
+                <input type="text" name="recipe-url" style="width: 400px"><br>
+        </div>
+        <br>
+        <div class="form-group">
+            <h4>Select a Diet Transformation:</h4>
+            <label for="diet-opt">Diet Type:</label>
+            <select class="form-control" name="diet-opt" style="width:auto;">
+                <option value="none">None</option>
+                <option value="omnivore">Omnivore</option>
+                <option value="pescatarian">Pescatarian</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="vegan">Vegan</option>
+                <option value="lactose free">Lactose Free</option>
+                <option value="gluten free">Gluten Free</option>
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
+            <h4>Select a Health Transformation:</h4>
+            <label for="health-opt">Health Type:</label>
+            <select class="form-control" name="health-opt" style="width:auto;">
+                <option value="none">None</option>
+                <option value="low cal">Low-Cal</option>
+                <option value="low fat">Low-Fat</option>
+                <option value="low sodium">Low-Sodium</option>
+                <option value="low carb">Low-Carb</option>
+                <option value="low gi">Low-Glycemic Index</option>
+            </select>
+        </div>
+        <br>
+        <div class="form-group">
+            <h4>Easy to DIY?:</h4>
+            <input type="checkbox" name="easy-diy" value="easy-diy"> Sure!
+        </div>
+        <br>
+        <input type="submit" class="btn btn-info" value="submit">
+    </form>
 </div>
 
 {% endblock %}

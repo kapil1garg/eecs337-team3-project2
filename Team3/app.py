@@ -14,6 +14,8 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 BASIC_INGREDIENTS = get_basic_ingredients()
 
+LOADING_PAGE = False
+
 @app.route('/')
 def base():
     return render_template('index.html')
@@ -21,6 +23,8 @@ def base():
 @app.route('/parse_recipes', methods=['GET', 'POST'])
 def parse_recipes():
     if request.method == 'POST':
+        LOADING_PAGE = True
+
         # HERE is where we will do all of the parsing and transforming
         recipeURL = request.form.get('recipe-url')
         session['recipeURL'] = recipeURL
@@ -41,6 +45,7 @@ def parse_recipes():
 
         session['recipeDict'] = recipeDict
 
+        LOADING_PAGE = False
         return redirect(url_for('view_recipe'))
 
     return render_template('parse_recipes.html')
