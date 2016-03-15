@@ -210,6 +210,7 @@ def get_parsed_methods(directions, cooking_verbs, primary_methods):
     methods = []
     words = []
     bigrams = []
+
     for direction in directions:
         words_per_sent = nltk.word_tokenize(direction)
         words_per_sent = [word.lower() for word in words_per_sent if word.isalpha()]
@@ -238,6 +239,8 @@ def get_parsed_methods(directions, cooking_verbs, primary_methods):
     else:
         p_method = 'None'
     methods = list(set(methods))
+    print methods
+    print p_method
     return methods, p_method
 
 def get_parsed_tools(directions, cooking_tools):
