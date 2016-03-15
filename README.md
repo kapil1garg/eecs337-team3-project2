@@ -1,5 +1,6 @@
 # Project 2: Recipe Analyzer
-Recipe project for Team 3, built for Northwestern's EECS 337. 
+### Recipe project for Team 3, built for Northwestern's EECS 337. 
+### Built by: [Kapil Garg](https://github.com/kapil1garg), [Noah Wolfenzon](https://github.com/nwolfenzon), and [Yifeng Zhang](https://github.com/SuperJohnZhang)
 
 # Using Project
 ## First Time Setup
