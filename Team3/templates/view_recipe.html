@@ -7,7 +7,7 @@
                     Result may not be accurate...
                 </p>
             {% endif %}
-            {% if dietType!='none' or health!='none' %}
+            {% if dietType!='none' or health!='none' or easyDIY%}
                 <div class="col-md-5">
             {% else %}
                 <div class="col-md-10">
@@ -31,7 +31,7 @@
                     <br>
                 {% endfor %}
             </div>
-            {% if dietType!='none' or healthType!='none' %}
+            {% if dietType!='none' or healthType!='none' or easyDIY %}
             <div class="col-md-5">
                 <h2>{{ recipeDict['name'] }} <small>modified: 
                                                     {% if dietType != 'none' %}
@@ -42,6 +42,12 @@
                                                     {% endif %}
                                                     {% if healthType != 'none' %}
                                                         {{ healthType }}
+                                                    {% endif %}
+                                                    {% if healthType != 'none' and easyDIY%}
+                                                        ,
+                                                    {% endif %}
+                                                    {% if easyDIY %}
+                                                        easy to DIY
                                                     {% endif %}
                                                     </small></h2>
                 <br>

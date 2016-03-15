@@ -30,16 +30,13 @@ def parse_recipes():
 
 		#dietDirection = request.form.get('diet-dir')
 		dietType = request.form.get('diet-opt')
-
-		#session['dietDirection'] = dietDirection
 		session['dietType'] = dietType
 
-
-		healthDirection = request.form.get('health-dir')
 		healthType = request.form.get('health-opt')
-		
-		session['healthDirection'] = healthDirection
 		session['healthType'] = healthType
+
+		easyDIY = request.form.get('easy-diy')
+		session['easy diy'] = easyDIY is not None
 
 
 		recipeText = get_recipetext_from_html(recipeURL)
@@ -65,6 +62,8 @@ def view_recipe():
 
 	#healthDirection = session['healthDirection']
 	healthType = session['healthType']
+
+	easyDIY = session['easy diy']
 
 	dietSubstitutes = {}
 	if dietType != 'none':
@@ -99,11 +98,19 @@ def view_recipe():
 			healthSubstitutes = Transformer.transformation_handler(recipeDict, 'low gi')
 
 	if healthSubstitutes:
-
 		recipeDict = clean_dict(recipeDict, healthSubstitutes)
 
+
+	easyDiySubstitutes = {}
+	if easyDIY:
+		easyDiySubstitutes = Transformer.transformation_handler(recipeDict, 'easy-to-diy')
+
+	if easyDiySubstitutes:
+
+		recipeDict = make_easy(recipeDict, easyDiySubstitutes)
+
 	return render_template('view_recipe.html', recipeURL=recipeURL, origRecipeDict=origRecipeDict, recipeDict=recipeDict, dietType=dietType,
-							dietSubstitutes=dietSubstitutes, healthSubstitutes=healthSubstitutes, healthType=healthType)
+							dietSubstitutes=dietSubstitutes, healthSubstitutes=healthSubstitutes, healthType=healthType, easyDIY=easyDIY)
 
 def clean_dict(recipeDict, substitutes):
 
@@ -127,6 +134,16 @@ def clean_dict(recipeDict, substitutes):
 		if ingredient['name'] in substitutes.keys():
 			ingredient['name'] = substitutes[ingredient['name']]
 
+
+	return recipeDict
+
+def make_easy(recipeDict, substitutes):
+
+	for ingredient in recipeDict['ingredients']:
+
+		if ingredient['name'] in substitutes.keys():
+
+			ingredient['name'] = '<a href=' + substitutes[ingredient['name']][0] + '>' + ingredient['name'] + '</a>'
 
 	return recipeDict
 
