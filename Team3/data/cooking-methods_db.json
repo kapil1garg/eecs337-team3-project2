@@ -2,26 +2,17 @@
     "cooking-methods": [
         "bake",
         "barbecue",
-        "baste",
-        "blacken",
-        "blanch",
         "boil",
         "braise",
-        "brine",
         "broast",
-        "brown",
-        "caramelize",
+        "broil",
         "deep fry",
         "dehydrate",
         "fry",
         "grill",
-        "glaze",
-        "microwave",
         "pan fry",
-        "parboil",
         "poach",
         "pressure cook",
-        "puree",
         "reduce",
         "roast",
         "rotiserie",
@@ -31,7 +22,6 @@
         "smoke",
         "steam",
         "stew",
-        "stir fry",
-        "wok"
+        "stir fry"
     ]
 }
